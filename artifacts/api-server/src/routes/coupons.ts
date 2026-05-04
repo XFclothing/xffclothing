@@ -1,8 +1,41 @@
 import { Router } from "express";
-import { db, couponsTable, ordersTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
 
 const router = Router();
+
+function getSupabase() {
+  const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || "";
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+  return { url, key };
+}
+
+async function supabaseGet(path: string) {
+  const { url, key } = getSupabase();
+  const res = await fetch(`${url}/rest/v1/${path}`, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+  });
+  const text = await res.text();
+  return { ok: res.ok, status: res.status, data: text ? JSON.parse(text) : null };
+}
+
+async function supabasePatch(path: string, body: object) {
+  const { url, key } = getSupabase();
+  const res = await fetch(`${url}/rest/v1/${path}`, {
+    method: "PATCH",
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  return { ok: res.ok, data: text ? JSON.parse(text) : null };
+}
 
 // POST /api/coupons/validate
 router.post("/coupons/validate", async (req, res): Promise<void> => {
@@ -14,39 +47,41 @@ router.post("/coupons/validate", async (req, res): Promise<void> => {
       return;
     }
 
-    const [coupon] = await db
-      .select()
-      .from(couponsTable)
-      .where(eq(couponsTable.code, code.toUpperCase().trim()));
+    const normalized = code.toUpperCase().trim();
+    const { ok, data } = await supabaseGet(
+      `coupons?code=eq.${encodeURIComponent(normalized)}&limit=1`
+    );
 
-    if (!coupon) {
-      res.status(404).json({ error: "Invalid coupon code" });
+    if (!ok || !data || data.length === 0) {
+      res.status(404).json({ valid: false, error: "Invalid coupon code" });
       return;
     }
+
+    const coupon = data[0];
 
     if (!coupon.active) {
-      res.status(400).json({ error: "This coupon is no longer active" });
+      res.status(400).json({ valid: false, error: "This coupon is no longer active" });
       return;
     }
 
-    if (coupon.expiresAt && new Date(coupon.expiresAt) < new Date()) {
-      res.status(400).json({ error: "This coupon has expired" });
+    if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) {
+      res.status(400).json({ valid: false, error: "This coupon has expired" });
       return;
     }
 
-    if (coupon.usageLimit !== null && coupon.usageCount >= coupon.usageLimit) {
-      res.status(400).json({ error: "This coupon has reached its usage limit" });
+    if (coupon.usage_limit !== null && coupon.usage_count >= coupon.usage_limit) {
+      res.status(400).json({ valid: false, error: "This coupon has reached its usage limit" });
       return;
     }
 
     res.json({
       valid: true,
       code: coupon.code,
-      discountPercent: coupon.discountPercent,
+      discountPercent: coupon.discount_percent,
     });
   } catch (err: any) {
     console.error("Coupon validate error:", err);
-    res.status(500).json({ error: "Failed to validate coupon" });
+    res.status(500).json({ valid: false, error: "Failed to validate coupon" });
   }
 });
 
@@ -65,8 +100,7 @@ router.post("/orders/place", async (req, res): Promise<void> => {
       return;
     }
 
-    const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+    const { url: supabaseUrl, key: supabaseKey } = getSupabase();
 
     if (!supabaseUrl || !supabaseKey) {
       res.status(500).json({ error: "Supabase config missing" });
@@ -82,13 +116,20 @@ router.post("/orders/place", async (req, res): Promise<void> => {
 
     // Increment coupon usage if a coupon was applied
     if (couponCode) {
-      await db
-        .update(couponsTable)
-        .set({ usageCount: sql`${couponsTable.usageCount} + 1` })
-        .where(eq(couponsTable.code, couponCode.toUpperCase().trim()));
+      const normalized = couponCode.toUpperCase().trim();
+      const { data: couponData } = await supabaseGet(
+        `coupons?code=eq.${encodeURIComponent(normalized)}&limit=1`
+      );
+      if (couponData && couponData.length > 0) {
+        const currentCount = couponData[0].usage_count || 0;
+        await supabasePatch(
+          `coupons?code=eq.${encodeURIComponent(normalized)}`,
+          { usage_count: currentCount + 1 }
+        );
+      }
     }
 
-    // Insert order into Supabase orders table (plain text shipping_address)
+    // Insert order into Supabase orders table
     const orderRes = await fetch(`${supabaseUrl}/rest/v1/orders`, {
       method: "POST",
       headers,
