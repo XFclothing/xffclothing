@@ -40,6 +40,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
           key={displayImage}
           src={displayImage}
           alt={product.name}
+          loading="lazy"
           className="object-cover w-full h-full transition-all duration-500 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

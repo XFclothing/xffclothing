@@ -156,6 +156,7 @@ export default function ProductDetail() {
                         <img
                           src={img}
                           alt={`${cartName} view ${idx + 1}`}
+                          loading="lazy"
                           className="w-full h-full object-cover absolute inset-0"
                         />
                       </div>
@@ -211,7 +212,7 @@ export default function ProductDetail() {
                       activeSlide === idx ? "border-foreground" : "border-transparent opacity-50 hover:opacity-80"
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img src={img} alt="" loading="lazy" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

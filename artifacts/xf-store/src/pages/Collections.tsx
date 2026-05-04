@@ -36,8 +36,9 @@ export default function Collections() {
           >
             <div className="aspect-[4/5] md:aspect-video w-full bg-muted relative overflow-hidden group">
               <img 
-                src="/images/campaign-1.png" 
-                alt="Campaign Shot 1" 
+                src="/images/campaign-1.webp" 
+                alt="Campaign Shot 1"
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
             </div>
@@ -57,8 +58,9 @@ export default function Collections() {
           >
             <div className="aspect-[3/4] w-full bg-muted relative overflow-hidden group">
               <img 
-                src="/images/campaign-2.png" 
-                alt="Campaign Shot 2" 
+                src="/images/campaign-2.webp" 
+                alt="Campaign Shot 2"
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
             </div>
