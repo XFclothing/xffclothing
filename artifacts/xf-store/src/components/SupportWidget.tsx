@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Plus, ChevronLeft, Send, Trash2 } from "lucide-react";
+import { MessageCircle, X, Plus, ChevronLeft, Send, Trash2, CheckCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase, Ticket, TicketMessage } from "@/lib/supabase";
 import { sendTicketNotificationToStaff } from "@/lib/email";
@@ -75,6 +75,13 @@ export function SupportWidget() {
     }
     setReply("");
     setReplying(false);
+  }
+
+  async function closeTicket() {
+    if (!activeTicket) return;
+    await supabase.from("tickets").update({ status: "closed" }).eq("id", activeTicket.id);
+    setTickets((prev) => prev.map((t) => t.id === activeTicket.id ? { ...t, status: "closed" } : t));
+    setActiveTicket((prev) => prev ? { ...prev, status: "closed" } : prev);
   }
 
   async function deleteTicket(ticketId: string) {
@@ -180,6 +187,15 @@ export function SupportWidget() {
                     title="New Ticket"
                   >
                     <Plus className="w-4 h-4" />
+                  </button>
+                )}
+                {view === "ticket" && activeTicket?.status !== "closed" && (
+                  <button
+                    onClick={closeTicket}
+                    className="text-foreground/30 hover:text-foreground transition-colors"
+                    title="Close ticket"
+                  >
+                    <CheckCheck className="w-4 h-4" />
                   </button>
                 )}
                 <button onClick={() => setOpen(false)} className="text-foreground/30 hover:text-foreground transition-colors">
