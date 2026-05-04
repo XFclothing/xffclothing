@@ -1,5 +1,50 @@
-[nix]
-channel = "stable-25_05"
+modules = ["nodejs-24", "postgresql-16"]
+
+[deployment]
+router = "application"
+deploymentTarget = "autoscale"
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+[workflows]
 
 [agent]
+stack = "PNPM_WORKSPACE"
 expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+
+[[ports]]
+localPort = 8081
+externalPort = 80
+
+[[ports]]
+localPort = 8082
+externalPort = 3002
+
+[[ports]]
+localPort = 20931
+externalPort = 3000
+
+[userenv]
+
+[userenv.shared]
+VITE_SUPABASE_URL = "https://rkcnbiqyhqnmwysqydxc.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrY25iaXF5aHFubXd5c3F5ZHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4MTkyMzcsImV4cCI6MjA5MzM5NTIzN30.t6qrP1ALiU5GxiwfdJrzwOTDi83JRA95xIOUIFG8zz4"
+VITE_EMAILJS_SERVICE_ID = "service_q61z62h"
+RESEND_API_KEY = "re_NpMZKnkL_FC5wewgczx2fvVpuAXQHNWiK"
+GMX_PASSWORD = "XFclothing12!"
+BREVO_LOGIN = "xfclothing@gmx.de"
+BREVO_SMTP_KEY = "xsmtpsib-8b9308b499ae124204b78234a2e6b5cf64c69c2098a4ef1d8b3def2961fd0485-fTOsEEXLlJ9AZOmO"
+DATABASE_URL = "postgresql://postgres:gmxtBL16gyLQMPST@db.rkcnbiqyhqnmwysqydxc.supabase.co:5432/postgres"
+
+[nix]
+channel = "stable-25_05"
