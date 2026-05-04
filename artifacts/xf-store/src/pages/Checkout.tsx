@@ -32,7 +32,7 @@ async function apiPost(path: string, body: unknown) {
 }
 
 export default function Checkout() {
-  const { user, profile } = useAuth();
+  const { user, profile, loading } = useAuth();
   const { items, totalPrice, clearCart } = useCart();
   const [, navigate] = useLocation();
 
@@ -66,6 +66,14 @@ export default function Checkout() {
         if (def) setSelectedAddressId(def.id);
       });
   }, [user]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-5 h-5 border border-foreground/20 border-t-foreground/60 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!user) {
     navigate("/login?redirect=/checkout");
