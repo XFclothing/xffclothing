@@ -85,15 +85,6 @@ export default function Home() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.85 }}
-            className="text-xs md:text-sm uppercase tracking-[0.55em] text-foreground/50 mb-3"
-          >
-            {t.home.unseenCollection}
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.05 }}
             className="text-[11px] uppercase tracking-[0.35em] text-foreground/25 mb-16"
           >
