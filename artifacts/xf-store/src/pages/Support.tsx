@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { Plus, X, ChevronRight } from "lucide-react";
+import { Plus, X, ChevronRight, Trash2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase, Ticket, TicketMessage } from "@/lib/supabase";
 import { sendTicketNotificationToStaff } from "@/lib/email";
@@ -46,6 +46,12 @@ export default function Support() {
       .order("created_at", { ascending: false });
     setTickets((data as Ticket[]) || []);
     setTicketsLoading(false);
+  }
+
+  async function deleteTicket(ticketId: string) {
+    await supabase.from("ticket_messages").delete().eq("ticket_id", ticketId);
+    await supabase.from("tickets").delete().eq("id", ticketId);
+    setTickets((prev) => prev.filter((t) => t.id !== ticketId));
   }
 
   async function createTicket(e: React.FormEvent) {
@@ -149,20 +155,30 @@ export default function Support() {
           ) : (
             <div className="space-y-3">
               {tickets.map((ticket) => (
-                <button
-                  key={ticket.id}
-                  onClick={() => openTicket(ticket)}
-                  className="w-full border border-foreground/8 p-5 text-left hover:border-foreground/20 transition-colors flex items-start justify-between gap-4"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-foreground font-medium truncate">{ticket.subject}</p>
-                    <p className="text-xs text-foreground/30 mt-1">{new Date(ticket.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
-                  </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className={`text-[10px] uppercase tracking-widest ${TICKET_STATUS_COLORS[ticket.status]}`}>{ticket.status}</span>
-                    <ChevronRight className="w-4 h-4 text-foreground/20" />
-                  </div>
-                </button>
+                <div key={ticket.id} className="flex items-stretch gap-2">
+                  <button
+                    onClick={() => openTicket(ticket)}
+                    className="flex-1 border border-foreground/8 p-5 text-left hover:border-foreground/20 transition-colors flex items-start justify-between gap-4"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-foreground font-medium truncate">{ticket.subject}</p>
+                      <p className="text-xs text-foreground/30 mt-1">{new Date(ticket.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                    </div>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      <span className={`text-[10px] uppercase tracking-widest ${TICKET_STATUS_COLORS[ticket.status]}`}>{ticket.status}</span>
+                      <ChevronRight className="w-4 h-4 text-foreground/20" />
+                    </div>
+                  </button>
+                  {ticket.status === "closed" && (
+                    <button
+                      onClick={() => deleteTicket(ticket.id)}
+                      className="px-4 border border-foreground/8 text-foreground/20 hover:text-red-400/70 hover:border-red-400/20 transition-colors flex-shrink-0 flex items-center"
+                      title="Delete ticket"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
           )}
