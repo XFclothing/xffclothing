@@ -1,0 +1,67 @@
+2026-05-04T18:41:31.098836746Z ==> Downloading cache...
+2026-05-04T18:41:31.143197492Z ==> Cloning from https://github.com/XFclothing/xffclothing
+2026-05-04T18:41:35.245171599Z ==> Checking out commit 485da652dc8afea41f01fc9789bb0ed0ab393641 in branch main
+2026-05-04T18:41:40.766655871Z ==> Downloaded 163MB in 2s. Extraction took 4s.
+2026-05-04T18:41:46.331059676Z ==> Using Node.js version 24.14.1 (default)
+2026-05-04T18:41:46.356488825Z ==> Docs on specifying a Node.js version: https://render.com/docs/node-version
+2026-05-04T18:41:46.583373803Z ==> Running build command 'npm install -g pnpm@10 && pnpm install --frozen-lockfile=false && pnpm --filter @workspace/xf-store run build && pnpm --filter @workspace/api-server run build'...
+2026-05-04T18:41:48.197386031Z 
+2026-05-04T18:41:48.197414782Z changed 1 package in 2s
+2026-05-04T18:41:48.197545446Z 
+2026-05-04T18:41:48.197632308Z 1 package is looking for funding
+2026-05-04T18:41:48.197675039Z   run `npm fund` for details
+2026-05-04T18:41:55.345578591Z 
+2026-05-04T18:41:55.345609162Z > @workspace/xf-store@0.0.0 build /opt/render/project/src/artifacts/xf-store
+2026-05-04T18:41:55.345659214Z > vite build --config vite.config.ts
+2026-05-04T18:41:55.345664044Z 
+2026-05-04T18:41:55.700028226Z vite v7.3.2 building client environment for production...
+2026-05-04T18:41:55.783813705Z transforming...
+2026-05-04T18:41:56.470551228Z src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+2026-05-04T18:41:58.515898226Z src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+2026-05-04T18:42:00.76232174Z ✓ 2263 modules transformed.
+2026-05-04T18:42:01.396676629Z rendering chunks...
+2026-05-04T18:42:01.4105758Z computing gzip size...
+2026-05-04T18:42:01.445937077Z dist/public/index.html                                                               0.72 kB │ gzip:   0.40 kB
+2026-05-04T18:42:01.446154413Z dist/public/assets/ChatGPT_Image_3._Mai_2026__19_49_35_1777830790029-CqgIXlGL.png  831.54 kB
+2026-05-04T18:42:01.446283767Z dist/public/assets/index-DNG_-E2e.css                                              127.57 kB │ gzip:  19.79 kB
+2026-05-04T18:42:01.446413761Z dist/public/assets/index--IRgJBOJ.js                                               949.71 kB │ gzip: 267.22 kB
+2026-05-04T18:42:01.446506364Z 
+2026-05-04T18:42:01.446514304Z (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-05-04T18:42:01.446518944Z - Using dynamic import() to code-split the application
+2026-05-04T18:42:01.446523745Z - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2026-05-04T18:42:01.446527165Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2026-05-04T18:42:01.446916587Z ✓ built in 5.72s
+2026-05-04T18:42:02.021040206Z 
+2026-05-04T18:42:02.03857427Z > @workspace/api-server@0.0.0 build /opt/render/project/src/artifacts/api-server
+2026-05-04T18:42:02.038588361Z > node ./build.mjs
+2026-05-04T18:42:02.038592811Z 
+2026-05-04T18:42:02.611718159Z 
+2026-05-04T18:42:02.61174113Z   dist/index.mjs                       2.9mb ⚠️
+2026-05-04T18:42:02.61174637Z   dist/pino-worker.mjs               153.4kb
+2026-05-04T18:42:02.61175054Z   dist/pino-file.mjs                 142.1kb
+2026-05-04T18:42:02.61175441Z   dist/pino-pretty.mjs               114.6kb
+2026-05-04T18:42:02.611768941Z   dist/thread-stream-worker.mjs        7.3kb
+2026-05-04T18:42:02.611771581Z   dist/index.mjs.map                   4.1mb
+2026-05-04T18:42:02.611774121Z   dist/pino-worker.mjs.map           256.9kb
+2026-05-04T18:42:02.611779581Z   dist/pino-file.mjs.map             229.0kb
+2026-05-04T18:42:02.611782221Z   dist/pino-pretty.mjs.map           203.9kb
+2026-05-04T18:42:02.611784771Z   dist/thread-stream-worker.mjs.map   12.0kb
+2026-05-04T18:42:02.611787142Z 
+2026-05-04T18:42:02.611790682Z ⚡ Done in 509ms
+2026-05-04T18:42:04.549858071Z ==> Uploading build...
+2026-05-04T18:42:18.181544506Z ==> Uploaded in 5.9s. Compression took 7.7s
+2026-05-04T18:42:18.257294266Z ==> Build successful 🎉
+2026-05-04T18:42:21.982913691Z ==> Deploying...
+2026-05-04T18:42:22.193156161Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-04T18:42:45.242758776Z ==> Running 'NODE_ENV=production node artifacts/api-server/dist/index.mjs'
+2026-05-04T18:42:47.244560773Z file:///opt/render/project/src/artifacts/api-server/dist/index.mjs:77229
+2026-05-04T18:42:47.244583165Z   throw new Error("SESSION_SECRET environment variable is required");
+2026-05-04T18:42:47.244586685Z         ^
+2026-05-04T18:42:47.244589755Z 
+2026-05-04T18:42:47.244593556Z Error: SESSION_SECRET environment variable is required
+2026-05-04T18:42:47.244597026Z     at file:///opt/render/project/src/artifacts/api-server/dist/index.mjs:77229:9
+2026-05-04T18:42:47.244600026Z     at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+2026-05-04T18:42:47.244602616Z     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+2026-05-04T18:42:47.244605307Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+2026-05-04T18:42:47.244616037Z 
+2026-05-04T18:42:47.244619317Z Node.js v24.14.1
