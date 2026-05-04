@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: xf-store
+    env: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install -g pnpm@10 && pnpm install --frozen-lockfile=false && pnpm --filter @workspace/xf-store run build && pnpm --filter @workspace/api-server run build
+    startCommand: NODE_ENV=production node artifacts/api-server/dist/index.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_PATH
+        value: /
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
