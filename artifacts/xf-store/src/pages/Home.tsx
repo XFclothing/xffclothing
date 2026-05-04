@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import xfLogo from "@assets/ChatGPT_Image_3._Mai_2026,_19_49_35_1777830790029.png";
-import xfLogoDark from "/logo-dark.png";
+import xfLogoBlack from "/logo-black.png";
 import { featured } from "@/data/products";
 import { useLang } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -66,7 +66,7 @@ export default function Home() {
             className="mb-10"
           >
             <img
-              src={isDark ? xfLogo : xfLogoDark}
+              src={isDark ? xfLogo : xfLogoBlack}
               alt="XF"
               data-testid="img-xf-logo-hero"
               className="h-28 md:h-36 w-auto dark:drop-shadow-[0_0_40px_rgba(255,255,255,0.15)]"

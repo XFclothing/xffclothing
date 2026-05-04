@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useLang } from "@/context/LanguageContext";
 import xfLogo from "@assets/ChatGPT_Image_3._Mai_2026,_19_49_35_1777830790029.png";
-import xfLogoDark from "/logo-dark.png";
+import xfLogoBlack from "/logo-black.png";
 
 export function Nav() {
   const [location] = useLocation();
@@ -71,7 +71,7 @@ export function Nav() {
         <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 z-50">
             <img
-              src={isDark ? xfLogo : xfLogoDark}
+              src={isDark ? xfLogo : xfLogoBlack}
               alt="XF Logo"
               data-testid="img-nav-logo"
               className="h-8 w-auto transition-opacity duration-300"
