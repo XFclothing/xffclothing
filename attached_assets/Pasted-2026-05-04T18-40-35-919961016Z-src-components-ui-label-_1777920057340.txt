@@ -1,0 +1,50 @@
+2026-05-04T18:40:35.919961016Z src/components/ui/label.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+2026-05-04T18:40:37.860933594Z ✓ 2263 modules transformed.
+2026-05-04T18:40:38.346877757Z rendering chunks...
+2026-05-04T18:40:38.3590314Z computing gzip size...
+2026-05-04T18:40:38.390716078Z dist/public/index.html                                                               0.72 kB │ gzip:   0.40 kB
+2026-05-04T18:40:38.390742239Z dist/public/assets/ChatGPT_Image_3._Mai_2026__19_49_35_1777830790029-CqgIXlGL.png  831.54 kB
+2026-05-04T18:40:38.390755919Z dist/public/assets/index-DNG_-E2e.css                                              127.57 kB │ gzip:  19.79 kB
+2026-05-04T18:40:38.39077064Z dist/public/assets/index--IRgJBOJ.js                                               949.71 kB │ gzip: 267.22 kB
+2026-05-04T18:40:38.390860242Z 
+2026-05-04T18:40:38.390870282Z (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-05-04T18:40:38.390875812Z - Using dynamic import() to code-split the application
+2026-05-04T18:40:38.390881312Z - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2026-05-04T18:40:38.390885973Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2026-05-04T18:40:38.391167079Z ✓ built in 4.67s
+2026-05-04T18:40:38.852299774Z 
+2026-05-04T18:40:38.852322385Z > @workspace/api-server@0.0.0 build /opt/render/project/src/artifacts/api-server
+2026-05-04T18:40:38.852327525Z > node ./build.mjs
+2026-05-04T18:40:38.852331495Z 
+2026-05-04T18:40:39.448049696Z 
+2026-05-04T18:40:39.448075717Z   dist/index.mjs                       2.9mb ⚠️
+2026-05-04T18:40:39.448080497Z   dist/pino-worker.mjs               153.4kb
+2026-05-04T18:40:39.448083787Z   dist/pino-file.mjs                 142.1kb
+2026-05-04T18:40:39.448097428Z   dist/pino-pretty.mjs               114.6kb
+2026-05-04T18:40:39.448099577Z   dist/thread-stream-worker.mjs        7.3kb
+2026-05-04T18:40:39.448101548Z   dist/index.mjs.map                   4.1mb
+2026-05-04T18:40:39.448103548Z   dist/pino-worker.mjs.map           256.9kb
+2026-05-04T18:40:39.448105468Z   dist/pino-file.mjs.map             229.0kb
+2026-05-04T18:40:39.448107488Z   dist/pino-pretty.mjs.map           203.9kb
+2026-05-04T18:40:39.448109758Z   dist/thread-stream-worker.mjs.map   12.0kb
+2026-05-04T18:40:39.448111598Z 
+2026-05-04T18:40:39.448114088Z ⚡ Done in 533ms
+2026-05-04T18:40:42.956736814Z ==> Uploading build...
+2026-05-04T18:40:54.236079372Z ==> Uploaded in 5.9s. Compression took 5.4s
+2026-05-04T18:40:54.294586025Z ==> Build successful 🎉
+2026-05-04T18:40:57.621191573Z ==> Deploying...
+2026-05-04T18:40:57.871243387Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-04T18:41:19.181074284Z ==> Running 'NODE_ENV=production node artifacts/api-server/dist/index.mjs'
+2026-05-04T18:41:20.783021254Z file:///opt/render/project/src/artifacts/api-server/dist/index.mjs:77229
+2026-05-04T18:41:20.783052476Z   throw new Error("SESSION_SECRET environment variable is required");
+2026-05-04T18:41:20.783055757Z         ^
+2026-05-04T18:41:20.783058317Z 
+2026-05-04T18:41:20.783061817Z Error: SESSION_SECRET environment variable is required
+2026-05-04T18:41:20.783067287Z     at file:///opt/render/project/src/artifacts/api-server/dist/index.mjs:77229:9
+2026-05-04T18:41:20.783070358Z     at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+2026-05-04T18:41:20.783073408Z     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+2026-05-04T18:41:20.783076628Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+2026-05-04T18:41:20.783079338Z 
+2026-05-04T18:41:20.783082579Z Node.js v24.14.1
+2026-05-04T18:41:27.836451192Z ==> Exited with status 1
+2026-05-04T18:41:27.838923303Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
