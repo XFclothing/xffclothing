@@ -22,7 +22,13 @@ async function apiPost(path: string, body: unknown) {
     credentials: "include",
     body: JSON.stringify(body),
   });
-  return res.json();
+  const text = await res.text();
+  if (!text) return { error: "No response from server" };
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { error: text || "Unexpected server error" };
+  }
 }
 
 export default function Checkout() {
