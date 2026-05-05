@@ -31,19 +31,6 @@ const hoodieGallery = {
   ],
 };
 
-const joggerGallery = {
-  black: [
-    "/images/product-jogger-black.webp",
-    "/images/product-jogger-black-flat.webp",
-  ],
-  grey: [
-    "/images/product-jogger-grey.webp",
-    "/images/product-jogger-grey-flat.webp",
-  ],
-  white: [
-    "/images/product-jogger-white.webp",
-  ],
-};
 
 const baggyJoggerGallery = {
   black: [
@@ -60,20 +47,6 @@ const baggyJoggerGallery = {
   ],
 };
 
-const slimJoggerGallery = {
-  black: [
-    "/images/product-jogger-slim.avif",
-    "/images/product-jogger-black.webp",
-    "/images/product-jogger-black-flat.webp",
-  ],
-  grey: [
-    "/images/product-jogger-grey.webp",
-    "/images/product-jogger-grey-flat.webp",
-  ],
-  white: [
-    "/images/product-jogger-white.webp",
-  ],
-};
 
 const openHemGallery = {
   black: [
@@ -107,13 +80,6 @@ function hoodieColors() {
   ];
 }
 
-function joggerColors() {
-  return [
-    { name: "Black", value: "#1a1a1a", image: "/images/product-jogger-black.webp", gallery: joggerGallery.black },
-    { name: "Grey",  value: "#888888", image: "/images/product-jogger-grey.webp",  gallery: joggerGallery.grey  },
-    { name: "White", value: "#f5f5f5", image: "/images/product-jogger-white.webp", gallery: joggerGallery.white },
-  ];
-}
 
 function openHemColors() {
   return [
@@ -258,19 +224,5 @@ export const products = [
     image: "/images/product-jogger-openhemm-black.webp",
     sizes: ["S", "M", "L", "XL"],
     colors: openHemColors(),
-  },
-  {
-    id: "xf-jogger-slim",
-    name: "XF JOGGER Slim Fit",
-    category: "jogger",
-    price: 35,
-    description: "Slim Fit. Close to the leg — athletic and modern. Soft Fleece Interior.",
-    image: "/images/product-jogger-slim.avif",
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Black", value: "#1a1a1a", image: "/images/product-jogger-slim.avif", gallery: slimJoggerGallery.black },
-      { name: "Grey",  value: "#888888", image: "/images/product-jogger-grey.webp",  gallery: slimJoggerGallery.grey  },
-      { name: "White", value: "#f5f5f5", image: "/images/product-jogger-white.webp", gallery: slimJoggerGallery.white },
-    ],
   },
 ];
