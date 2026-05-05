@@ -8,6 +8,7 @@ interface Color {
   name: string;
   value: string;
   image: string;
+  gallery?: string[];
 }
 
 interface ProductCardProps {
@@ -24,10 +25,19 @@ interface ProductCardProps {
 export function ProductCard({ product, index }: ProductCardProps) {
   const [, navigate] = useLocation();
   const [hoveredColor, setHoveredColor] = useState<number | null>(null);
+  const [cardHovered, setCardHovered] = useState(false);
   const { comingSoon, outOfStock, loaded } = useStoreSettings();
 
   const colors = product.colors;
-  const displayImage = colors && hoveredColor !== null ? colors[hoveredColor].image : product.image;
+  const activeColor = colors
+    ? hoveredColor !== null
+      ? colors[hoveredColor]
+      : colors[0]
+    : null;
+
+  const baseImage = activeColor ? activeColor.image : product.image;
+  const hoverImage = activeColor?.gallery?.[1] ?? null;
+  const displayImage = cardHovered && hoverImage ? hoverImage : baseImage;
 
   const isComingSoon = loaded && comingSoon;
   const isOutOfStock = loaded && !comingSoon && outOfStock.includes(product.id);
@@ -41,14 +51,32 @@ export function ProductCard({ product, index }: ProductCardProps) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative flex flex-col gap-4"
     >
-      <Link href={`/shop/${product.id}`} className="aspect-[3/4] relative overflow-hidden bg-muted cursor-pointer">
-        <motion.img
-          key={displayImage}
-          src={displayImage}
+      <Link
+        href={`/shop/${product.id}`}
+        className="aspect-[3/4] relative overflow-hidden bg-muted cursor-pointer"
+        onMouseEnter={() => setCardHovered(true)}
+        onMouseLeave={() => setCardHovered(false)}
+      >
+        {/* Base image */}
+        <img
+          src={baseImage}
           alt={product.name}
           loading="lazy"
-          className={`object-cover w-full h-full transition-all duration-500 ease-out group-hover:scale-105 ${unavailable ? "opacity-50" : ""}`}
+          className={`object-cover w-full h-full absolute inset-0 transition-all duration-500 ease-out group-hover:scale-105 ${unavailable ? "opacity-50" : ""}`}
         />
+
+        {/* Model hover image — fades in on hover */}
+        {hoverImage && (
+          <img
+            src={hoverImage}
+            alt={`${product.name} worn`}
+            loading="lazy"
+            className={`object-cover w-full h-full absolute inset-0 transition-opacity duration-500 ease-out group-hover:scale-105 ${
+              cardHovered ? "opacity-100" : "opacity-0"
+            } ${unavailable ? "opacity-50" : ""}`}
+          />
+        )}
+
         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         {unavailable && (
           <div className="absolute inset-0 flex items-center justify-center">
