@@ -136,7 +136,7 @@ router.post("/email/order", async (req, res) => {
     <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0 0 4px;">Order Reference</p>
     <p style="font-size:11px;color:rgba(255,255,255,0.25);margin:0 0 48px;font-family:monospace;">#${String(orderId).slice(0, 8).toUpperCase()}</p>
 
-    <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0;">XF by Xavier &amp; Fynn</p>
+    <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0;">BY XAVIER &amp; FYNN</p>
   </div>
 </div>`;
 
@@ -179,7 +179,7 @@ router.post("/email/order", async (req, res) => {
     <p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0 0 3px;">Order Ref</p>
     <p style="font-size:11px;color:rgba(255,255,255,0.2);margin:0 0 40px;font-family:monospace;">#${String(orderId).slice(0, 8).toUpperCase()}</p>
 
-    <p style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.12);margin:0;">XF by Xavier &amp; Fynn</p>
+    <p style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.12);margin:0;">BY XAVIER &amp; FYNN</p>
   </div>
 </div>`;
 
@@ -245,7 +245,7 @@ router.post("/email/newsletter-confirm", async (req, res) => {
   <h2 style="font-size:11px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin:0 0 32px;">XF — Unseen Collection</h2>
   <p style="font-size:15px;font-weight:700;color:#fff;margin:0 0 16px;letter-spacing:2px;text-transform:uppercase;">You're on the list.</p>
   <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0 0 32px;line-height:1.8;">You'll be the first to know when the XF Unseen Collection drops.<br><br>Stay close.</p>
-  <p style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;margin:0;">XF by Xavier &amp; Fynn</p>
+  <p style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;margin:0;">BY XAVIER &amp; FYNN</p>
 </div>`,
     });
     res.json({ ok: true });
@@ -288,7 +288,7 @@ router.post("/email/notify-subscribers", async (req, res) => {
   <h2 style="font-size:11px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin:0 0 32px;">XF — Notification</h2>
   <p style="font-size:15px;font-weight:700;color:#fff;margin:0 0 16px;letter-spacing:2px;text-transform:uppercase;">${subject}</p>
   <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0 0 32px;line-height:1.8;white-space:pre-line;">${message}</p>
-  <p style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;margin:0;">XF by Xavier &amp; Fynn</p>
+  <p style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;margin:0;">BY XAVIER &amp; FYNN</p>
 </div>`;
 
     const transport = createTransport();

@@ -12,7 +12,7 @@ export const translations = {
     },
     home: {
       releasingSoon: "RELEASING SOON", unseenCollection: "UNSEEN COLLECTION",
-      by: "XF by Xavier & Fynn", days: "DAYS", hours: "HOURS", minutes: "MINUTES",
+      by: "BY XAVIER & FYNN", days: "DAYS", hours: "HOURS", minutes: "MINUTES",
       notifyPlaceholder: "Be the first to know", notifyBtn: "Notify Me",
       onList: "You're on the list.",
       viewCollection: "View Collection", fromTheDrop: "From The Drop",
@@ -109,7 +109,7 @@ export const translations = {
     },
     home: {
       releasingSoon: "BALD VERFÜGBAR", unseenCollection: "UNSEEN KOLLEKTION",
-      by: "XF von Xavier & Fynn", days: "TAGE", hours: "STUNDEN", minutes: "MINUTEN",
+      by: "BY XAVIER & FYNN", days: "TAGE", hours: "STUNDEN", minutes: "MINUTEN",
       notifyPlaceholder: "Als Erster informiert werden", notifyBtn: "Benachrichtigen",
       onList: "Du bist auf der Liste.",
       viewCollection: "Kollektion ansehen", fromTheDrop: "Aus dem Drop",
