@@ -184,16 +184,6 @@ export const products = [
     colors: hoodieColors(),
   },
   {
-    id: "xf-hoodie-slim",
-    name: "XF Slim Fit Hoodie",
-    category: "hoodie",
-    price: 55,
-    description: "Slim Fit. Close to the body — athletic look. Heavy Cotton. Premium Quality.",
-    image: "/images/product-hoodie-black.webp",
-    sizes: ["S", "M", "L", "XL"],
-    colors: hoodieColors(),
-  },
-  {
     id: "xf-hoodie-boxy",
     name: "XF Boxy Hoodie",
     category: "hoodie",
