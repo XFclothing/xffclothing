@@ -274,9 +274,13 @@ export default function Login() {
 
               {mode === "login" && (
                 <div className="text-center mt-3">
-                  <a href="/reset-password" className="text-foreground/25 hover:text-foreground/60 text-xs uppercase tracking-widest transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/reset-password")}
+                    className="text-foreground/50 hover:text-foreground/80 text-xs uppercase tracking-widest transition-colors"
+                  >
                     {t.login.forgotPassword}
-                  </a>
+                  </button>
                 </div>
               )}
             </form>

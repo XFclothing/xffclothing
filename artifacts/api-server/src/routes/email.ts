@@ -313,4 +313,114 @@ router.post("/email/notify-subscribers", async (req, res) => {
   }
 });
 
+// GET /email/preview/reset-password — HTML preview of the reset password email
+router.get("/email/preview/reset-password", (_req, res) => {
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>XF — Password Reset</title>
+</head>
+<body style="margin:0;padding:0;background:#000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#000;min-height:100vh;">
+  <tr>
+    <td align="center" style="padding:60px 24px;">
+      <table width="100%" style="max-width:480px;" cellpadding="0" cellspacing="0">
+
+        <!-- Logo / Brand -->
+        <tr>
+          <td align="center" style="padding-bottom:48px;">
+            <p style="font-size:22px;font-weight:900;letter-spacing:12px;text-transform:uppercase;color:#fff;margin:0;">XF</p>
+          </td>
+        </tr>
+
+        <!-- Label -->
+        <tr>
+          <td align="center" style="padding-bottom:8px;">
+            <p style="font-size:10px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:0;">Password Reset</p>
+          </td>
+        </tr>
+
+        <!-- Heading -->
+        <tr>
+          <td align="center" style="padding-bottom:32px;">
+            <h1 style="font-size:24px;font-weight:800;letter-spacing:6px;text-transform:uppercase;color:#fff;margin:0;">Reset Your Password</h1>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="padding-bottom:32px;">
+            <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          </td>
+        </tr>
+
+        <!-- Body text -->
+        <tr>
+          <td style="padding-bottom:16px;">
+            <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.8;margin:0;">
+              We received a request to reset the password for your XF account. Click the button below to choose a new password.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-bottom:40px;">
+            <p style="font-size:13px;color:rgba(255,255,255,0.35);line-height:1.8;margin:0;">
+              This link expires in <strong style="color:rgba(255,255,255,0.55);">1 hour</strong>. If you didn't request a reset, you can safely ignore this email.
+            </p>
+          </td>
+        </tr>
+
+        <!-- CTA Button -->
+        <tr>
+          <td align="center" style="padding-bottom:48px;">
+            <a href="#" style="display:inline-block;background:#fff;color:#000;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;text-decoration:none;padding:18px 40px;">
+              RESET PASSWORD
+            </a>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="padding-bottom:32px;">
+            <div style="height:1px;background:rgba(255,255,255,0.08);"></div>
+          </td>
+        </tr>
+
+        <!-- Footer note -->
+        <tr>
+          <td align="center" style="padding-bottom:8px;">
+            <p style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:3px;text-transform:uppercase;margin:0;">
+              If the button doesn't work, copy this link:
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding-bottom:40px;">
+            <p style="font-size:11px;color:rgba(255,255,255,0.3);margin:0;word-break:break-all;">
+              https://xf-store.replit.app/reset-password?token=...
+            </p>
+          </td>
+        </tr>
+
+        <!-- Brand footer -->
+        <tr>
+          <td align="center">
+            <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0;">
+              BY XAVIER &amp; FYNN
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>`;
+  res.setHeader("Content-Type", "text/html");
+  res.send(html);
+});
+
 export default router;
