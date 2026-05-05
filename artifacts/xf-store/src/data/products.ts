@@ -34,15 +34,16 @@ const hoodieGallery = {
 
 const baggyJoggerGallery = {
   black: [
-    "/images/product-jogger-black.png",
-    "/images/product-jogger-black-flat.png",
+    "/images/product-jogger-baggy.avif",
+    "/images/product-jogger-black.webp",
+    "/images/product-jogger-black-flat.webp",
   ],
   grey: [
-    "/images/product-jogger-grey.png",
-    "/images/product-jogger-grey-flat.png",
+    "/images/product-jogger-grey.webp",
+    "/images/product-jogger-grey-flat.webp",
   ],
   white: [
-    "/images/product-jogger-white.png",
+    "/images/product-jogger-white.webp",
   ],
 };
 
@@ -106,12 +107,12 @@ export const featured = [
     category: "jogger",
     price: 50,
     description: "Baggy Fit. Very wide cut — pure streetwear style. Soft Fleece Interior. Unisex.",
-    image: "/images/product-jogger-black.png",
+    image: "/images/product-jogger-baggy.avif",
     sizes: ["S", "M", "L", "XL"],
     colors: [
-      { name: "Black", value: "#1a1a1a", image: "/images/product-jogger-black.png", gallery: baggyJoggerGallery.black },
-      { name: "Grey",  value: "#888888", image: "/images/product-jogger-grey.png",  gallery: baggyJoggerGallery.grey  },
-      { name: "White", value: "#f5f5f5", image: "/images/product-jogger-white.png", gallery: baggyJoggerGallery.white },
+      { name: "Black", value: "#1a1a1a", image: "/images/product-jogger-baggy.avif", gallery: baggyJoggerGallery.black },
+      { name: "Grey",  value: "#888888", image: "/images/product-jogger-grey.webp",   gallery: baggyJoggerGallery.grey  },
+      { name: "White", value: "#f5f5f5", image: "/images/product-jogger-white.webp",  gallery: baggyJoggerGallery.white },
     ],
   },
 ];
