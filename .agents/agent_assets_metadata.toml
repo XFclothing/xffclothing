@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "UMo75sG4KNANhPZ2_bjzt"
+uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black.png"
+type = "image"
+title = "baggy jogger black open hem"
+
+[[generated]]
+id = "qoJbfLvcJR6OtaIGXGzSZ"
+uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-flat.png"
+type = "image"
+title = "baggy jogger black flat lay"
+
+[[generated]]
+id = "jtNpYNB35xgq8Up5j-Qwe"
+uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey.png"
+type = "image"
+title = "baggy jogger grey open hem"
+
+[[generated]]
+id = "HcMV6tGzkq0vUDzCQoy-q"
+uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-flat.png"
+type = "image"
+title = "baggy jogger grey flat lay"
+
+[[generated]]
+id = "IhnEeEwqHF06_Bw728d4Z"
+uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white.png"
+type = "image"
+title = "baggy jogger white open hem"
+
+[[generated]]
+id = "4i8SYDFgWsYlay8akQDGI"
+uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-flat.png"
+type = "image"
+title = "baggy jogger white flat lay"
