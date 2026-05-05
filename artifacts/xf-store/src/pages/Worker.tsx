@@ -35,6 +35,7 @@ export default function Worker() {
   const [filterStatus, setFilterStatus] = useState<OrderStatus | "all">("all");
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [activeOldOrder, setActiveOldOrder] = useState<Order | null>(null);
+  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
 
   // Shipping modal
   const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
@@ -66,7 +67,21 @@ export default function Worker() {
       .select("*, order_items(*)")
       .order("created_at", { ascending: false });
     if (error) console.error("Orders fetch error:", error.message);
-    setOrders((data as Order[]) || []);
+    const ordersData = (data as Order[]) || [];
+    const userIds = [...new Set(ordersData.map((o) => o.user_id).filter(Boolean))];
+    if (userIds.length > 0) {
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("id, name, email")
+        .in("id", userIds);
+      if (profilesData) {
+        const profileMap = Object.fromEntries(profilesData.map((p: any) => [p.id, p]));
+        setOrders(ordersData.map((o) => ({ ...o, profiles: profileMap[o.user_id] || null } as any)));
+        setOrdersLoading(false);
+        return;
+      }
+    }
+    setOrders(ordersData);
     setOrdersLoading(false);
   }
 
@@ -256,7 +271,10 @@ export default function Worker() {
                   {filteredOrders.map((order) => (
                     <div key={order.id} className="border border-foreground/8 p-6">
                       <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                        <div className="flex-1 min-w-0">
+                        <button
+                          onClick={() => setActiveOrder(order)}
+                          className="flex-1 min-w-0 text-left hover:opacity-70 transition-opacity"
+                        >
                           <div className="flex items-center gap-4 mb-2 flex-wrap">
                             <span className="text-foreground font-semibold text-sm">${order.total_price.toFixed(2)}</span>
                             <span className="text-foreground/25 text-xs">{new Date(order.created_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
@@ -276,7 +294,7 @@ export default function Worker() {
                               ))}
                             </div>
                           )}
-                        </div>
+                        </button>
                         <div className="flex-shrink-0 flex flex-col gap-2">
                           <span className={`text-[10px] uppercase tracking-[0.35em] px-3 py-1.5 border ${ORDER_STATUS_COLORS[order.status] || "text-foreground/50 border-foreground/20"} text-center`}>
                             {order.status}
@@ -423,6 +441,91 @@ export default function Worker() {
           )}
         </motion.div>
       </div>
+
+      {/* Order Detail Modal (read-only, no cancel) */}
+      <AnimatePresence>
+        {activeOrder && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setActiveOrder(null)}
+              className="fixed inset-0 bg-black/80 z-50 backdrop-blur-sm" />
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-lg bg-card border border-foreground/10 max-h-[90vh] overflow-y-auto"
+              >
+                <div className="flex items-center justify-between px-8 pt-8 pb-6 border-b border-foreground/8">
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.5em] text-foreground/25 mb-1">Order Details</p>
+                    <p className="text-[10px] text-foreground/20 font-mono">{activeOrder.id.split("-")[0].toUpperCase()}</p>
+                  </div>
+                  <button onClick={() => setActiveOrder(null)} className="text-foreground/30 hover:text-foreground transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="px-8 py-6 space-y-6">
+                  {(activeOrder as any).profiles && (
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Customer</p>
+                      <p className="text-sm text-foreground/70">{(activeOrder as any).profiles.name}</p>
+                      <p className="text-xs text-foreground/40 mt-0.5">{(activeOrder as any).profiles.email}</p>
+                      <p className="text-[10px] font-mono text-foreground/20 mt-1">{activeOrder.user_id}</p>
+                    </div>
+                  )}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Placed on</p>
+                      <p className="text-sm text-foreground/70">{new Date(activeOrder.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                      <p className="text-xs text-foreground/30 mt-0.5">{new Date(activeOrder.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Status</p>
+                      <span className={`text-xs uppercase tracking-widest font-semibold ${ORDER_STATUS_COLORS[activeOrder.status] || "text-foreground/50"}`}>{activeOrder.status}</span>
+                    </div>
+                  </div>
+                  {activeOrder.tracking_code && (
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Tracking</p>
+                      <p className="text-xs text-foreground/50 uppercase tracking-widest">{activeOrder.logistics_provider}</p>
+                      <p className="text-sm font-mono text-foreground/60 mt-0.5">{activeOrder.tracking_code}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-3">Shipping Address</p>
+                    <div className="bg-foreground/3 border border-foreground/6 px-4 py-3">
+                      <p className="text-sm text-foreground/60 leading-relaxed whitespace-pre-line">{activeOrder.shipping_address}</p>
+                    </div>
+                  </div>
+                  {activeOrder.order_items && activeOrder.order_items.length > 0 && (
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-3">Items ({activeOrder.order_items.length})</p>
+                      <div className="border border-foreground/6 divide-y divide-foreground/5">
+                        {activeOrder.order_items.map((item) => (
+                          <div key={item.id} className="flex items-center justify-between px-4 py-3">
+                            <div>
+                              <p className="text-sm text-foreground/70">{item.name}</p>
+                              <p className="text-xs text-foreground/30 mt-0.5">{item.size} · ×{item.quantity}</p>
+                            </div>
+                            <p className="text-sm text-foreground/50">${(item.price * item.quantity).toFixed(2)}</p>
+                          </div>
+                        ))}
+                        <div className="flex items-center justify-between px-4 py-3 bg-foreground/3">
+                          <p className="text-xs uppercase tracking-[0.35em] text-foreground/40">Total</p>
+                          <p className="text-sm font-semibold text-foreground/80">${activeOrder.total_price.toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="pt-2 border-t border-foreground/8 flex justify-end">
+                    <button onClick={() => setActiveOrder(null)} className="text-[9px] uppercase tracking-[0.3em] text-foreground/25 hover:text-foreground/60 px-3 py-2 transition-colors">Close</button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Shipping Modal */}
       <AnimatePresence>
