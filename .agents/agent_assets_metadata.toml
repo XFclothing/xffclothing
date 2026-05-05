@@ -11,7 +11,7 @@ title = "baggy jogger black worn"
 id = "qoJbfLvcJR6OtaIGXGzSZ"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-flat.png"
 type = "image"
-title = "black baggy jogger flat lay connected legs"
+title = "black jogger pants flat lengthwise folded"
 
 [[generated]]
 id = "jtNpYNB35xgq8Up5j-Qwe"
@@ -23,7 +23,7 @@ title = "baggy jogger grey worn"
 id = "HcMV6tGzkq0vUDzCQoy-q"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-flat.png"
 type = "image"
-title = "grey baggy jogger flat lay connected legs"
+title = "grey jogger pants flat lengthwise folded"
 
 [[generated]]
 id = "IhnEeEwqHF06_Bw728d4Z"
@@ -35,22 +35,22 @@ title = "baggy jogger white worn open hem"
 id = "4i8SYDFgWsYlay8akQDGI"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-flat.png"
 type = "image"
-title = "baggy jogger white open hem flat lay"
+title = "white jogger pants flat lengthwise folded"
 
 [[generated]]
 id = "7p_OrSjTcZy8Z8thBfaaV"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-folded.png"
 type = "image"
-title = "black baggy jogger neatly folded"
+title = "black jogger half folded"
 
 [[generated]]
 id = "aeRdhU_6y1wq3UcfXfMDP"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-folded.png"
 type = "image"
-title = "grey baggy jogger neatly folded"
+title = "grey jogger half folded"
 
 [[generated]]
 id = "ndygn14CwKyXktJ1zfKfg"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-folded.png"
 type = "image"
-title = "white baggy jogger neatly folded"
+title = "white jogger half folded"
