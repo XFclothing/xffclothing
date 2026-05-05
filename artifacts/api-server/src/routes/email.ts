@@ -301,6 +301,79 @@ router.post("/email/shipping", async (req, res) => {
   }
 });
 
+router.post("/email/cancel", async (req, res) => {
+  const { customerEmail, customerName, orderId, reason, items, total } = req.body;
+
+  if (!customerEmail || !orderId) {
+    res.status(400).json({ ok: false, error: "Missing required fields" });
+    return;
+  }
+
+  const itemsHtml = (items || [])
+    .map(
+      (i: any) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.65);font-size:13px;">${i.name}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:12px;text-align:center;">${i.size}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:12px;text-align:center;">×${i.quantity}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:13px;text-align:right;">€${(i.price * i.quantity).toFixed(2)}</td>
+      </tr>`
+    )
+    .join("");
+
+  const html = `
+<div style="background:#000;color:#fff;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;">
+  <div style="max-width:520px;margin:0 auto;padding:56px 40px;">
+    <p style="font-size:10px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 48px;">XF — Order Update</p>
+
+    <h1 style="font-size:26px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff;margin:0 0 8px;">Order Cancelled</h1>
+    <p style="font-size:13px;color:rgba(255,255,255,0.45);margin:0 0 40px;line-height:1.7;">
+      ${customerName ? "Hey " + customerName + ", your" : "Your"} order has been cancelled by our team.
+    </p>
+
+    ${reason ? `
+    <div style="border-left:2px solid rgba(255,255,255,0.15);padding:16px 20px;margin-bottom:32px;background:rgba(255,255,255,0.03);">
+      <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 8px;">Reason</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.55);margin:0;line-height:1.6;">${reason}</p>
+    </div>` : ""}
+
+    ${items && items.length > 0 ? `
+    <div style="border:1px solid rgba(255,255,255,0.08);padding:24px;margin-bottom:24px;">
+      <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 16px;">Cancelled Items</p>
+      <table style="width:100%;border-collapse:collapse;">
+        <tbody>${itemsHtml}</tbody>
+      </table>
+      <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+        <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Total</span>
+        <span style="font-size:16px;font-weight:700;color:rgba(255,255,255,0.6);">€${Number(total).toFixed(2)}</span>
+      </div>
+    </div>` : ""}
+
+    <p style="font-size:13px;color:rgba(255,255,255,0.35);line-height:1.8;margin:0 0 40px;">
+      If you have any questions, feel free to reach out to us through our support page.
+    </p>
+
+    <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0 0 4px;">Order Reference</p>
+    <p style="font-size:11px;color:rgba(255,255,255,0.2);margin:0 0 48px;font-family:monospace;">#${String(orderId).slice(0, 8).toUpperCase()}</p>
+
+    <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0;">XF by Xavier &amp; Fynn</p>
+  </div>
+</div>`;
+
+  try {
+    await createTransport().sendMail({
+      from: FROM,
+      to: customerEmail,
+      subject: "Your Order Has Been Cancelled — XF Clothing",
+      html,
+    });
+    res.json({ ok: true });
+  } catch (err: any) {
+    console.error("Cancel email error:", err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 router.post("/email/ticket", async (req, res) => {
   const { customerEmail, customerName, subject, message, workerEmails } = req.body;
 

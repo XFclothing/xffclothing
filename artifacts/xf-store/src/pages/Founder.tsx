@@ -163,6 +163,7 @@ export default function Founder() {
     if (!founderCancelOrderId || !founderCancelReason.trim()) return;
     setFounderCancelling(true);
     setFounderCancelError(null);
+    const cancelledOrder = orders.find((o) => o.id === founderCancelOrderId);
     const { error } = await supabase
       .from("orders")
       .update({ status: "cancelled", cancellation_reason: founderCancelReason.trim() })
@@ -181,6 +182,33 @@ export default function Founder() {
         ? { ...prev, status: "cancelled" as any, cancellation_reason: founderCancelReason.trim() }
         : prev
     );
+    // Send cancellation email to customer
+    if (cancelledOrder) {
+      try {
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("email, name")
+          .eq("id", cancelledOrder.user_id)
+          .single();
+        if (profileData?.email) {
+          const baseUrl = import.meta.env.VITE_API_URL || "";
+          await fetch(`${baseUrl}/api/email/cancel`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              customerEmail: profileData.email,
+              customerName: profileData.name || "",
+              orderId: cancelledOrder.id,
+              reason: founderCancelReason.trim(),
+              items: cancelledOrder.order_items || [],
+              total: cancelledOrder.total_price,
+            }),
+          });
+        }
+      } catch (e) {
+        console.error("Cancel email failed:", e);
+      }
+    }
     setFounderCancelOrderId(null);
     setFounderCancelReason("");
   }
