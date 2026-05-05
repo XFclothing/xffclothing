@@ -62,7 +62,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
           src={baseImage}
           alt={product.name}
           loading="lazy"
-          className={`object-cover w-full h-full absolute inset-0 transition-all duration-500 ease-out group-hover:scale-105 ${unavailable ? "opacity-50" : ""}`}
+          className={`object-contain w-full h-full absolute inset-0 transition-all duration-500 ease-out group-hover:scale-105 ${unavailable ? "opacity-50" : ""}`}
         />
 
         {/* Model hover image — fades in on hover */}
@@ -71,7 +71,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
             src={hoverImage}
             alt={`${product.name} worn`}
             loading="lazy"
-            className={`object-cover w-full h-full absolute inset-0 transition-opacity duration-500 ease-out group-hover:scale-105 ${
+            className={`object-contain w-full h-full absolute inset-0 transition-opacity duration-500 ease-out group-hover:scale-105 ${
               cardHovered ? "opacity-100" : "opacity-0"
             } ${unavailable ? "opacity-50" : ""}`}
           />

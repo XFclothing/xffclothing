@@ -163,7 +163,7 @@ export default function ProductDetail() {
                           src={img}
                           alt={`${cartName} view ${idx + 1}`}
                           loading="lazy"
-                          className="w-full h-full object-cover absolute inset-0"
+                          className="w-full h-full object-contain absolute inset-0"
                         />
                       </div>
                     ))}
