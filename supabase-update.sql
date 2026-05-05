@@ -113,6 +113,17 @@ ALTER TABLE admins DISABLE ROW LEVEL SECURITY;
 ALTER TABLE tickets DISABLE ROW LEVEL SECURITY;
 ALTER TABLE ticket_messages DISABLE ROW LEVEL SECURITY;
 
+-- store_settings (persists shop coming-soon + out-of-stock state)
+CREATE TABLE IF NOT EXISTS store_settings (
+  key TEXT PRIMARY KEY,
+  value JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE store_settings DISABLE ROW LEVEL SECURITY;
+INSERT INTO store_settings (key, value)
+VALUES ('shop', '{"coming_soon": false, "out_of_stock": []}')
+ON CONFLICT (key) DO NOTHING;
+
 -- ============================================================
 -- ROLE SYSTEM:
 --   FOUNDER emails (hardcoded): xfclothing@gmail.com, xaviermalucha@gmail.com
