@@ -390,3 +390,39 @@ id = "LQ9ADkgTC6-5lqKSBZYJV"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-black-model.png"
 type = "image"
 title = "xf hoodie black model tonal stitching"
+
+[[generated]]
+id = "QIZm3-_oGsEDqBiWU5H8U"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-grey-model.png"
+type = "image"
+title = "oversize hoodie grey model"
+
+[[generated]]
+id = "jTTmxIJj_TQ0yJm5kIrOX"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-white-model.png"
+type = "image"
+title = "oversize hoodie white model"
+
+[[generated]]
+id = "OyRw33usnEVnPfpod-rvG"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-design-grey-model.png"
+type = "image"
+title = "design hoodie grey model"
+
+[[generated]]
+id = "M_qIEqPZmxKCEZEgetwEH"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-design-white-model.png"
+type = "image"
+title = "design hoodie white model"
+
+[[generated]]
+id = "GynCOy6DdtD2TqTNOcIvn"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-grey-model.png"
+type = "image"
+title = "xf hoodie grey model"
+
+[[generated]]
+id = "j3hYvaeXqkq50ACG5RvKv"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-white-model.png"
+type = "image"
+title = "xf hoodie white model"

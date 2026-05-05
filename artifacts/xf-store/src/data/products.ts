@@ -27,10 +27,12 @@ const oversizeHoodieGallery = {
   grey: [
     "/images/product-hoodie-oversize-grey.png",
     "/images/product-hoodie-oversize-grey-flat.png",
+    "/images/product-hoodie-oversize-grey-model.png",
   ],
   white: [
     "/images/product-hoodie-oversize-white.png",
     "/images/product-hoodie-oversize-white-flat.png",
+    "/images/product-hoodie-oversize-white-model.png",
   ],
 };
 
@@ -42,9 +44,11 @@ const oversizedHoodieGallery = {
   ],
   grey: [
     "/images/product-hoodie-design-grey.png",
+    "/images/product-hoodie-design-grey-model.png",
   ],
   white: [
     "/images/product-hoodie-design-white.png",
+    "/images/product-hoodie-design-white-model.png",
   ],
 };
 
@@ -56,9 +60,11 @@ const xfHoodieGallery = {
   ],
   grey: [
     "/images/product-hoodie-xf-grey.png",
+    "/images/product-hoodie-xf-grey-model.png",
   ],
   white: [
     "/images/product-hoodie-xf-white.png",
+    "/images/product-hoodie-xf-white-model.png",
   ],
 };
 
