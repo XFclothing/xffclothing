@@ -74,7 +74,6 @@ router.post("/orders/place", async (req, res): Promise<void> => {
   const orderItems = (items as { name: string; price: number; quantity: number; size: string; productId?: string }[]).map(
     (item) => ({
       order_id: order.id,
-      product_id: item.productId || item.name,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
