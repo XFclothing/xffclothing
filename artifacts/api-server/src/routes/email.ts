@@ -3,18 +3,18 @@ import nodemailer from "nodemailer";
 
 const router = Router();
 
-const GMX_EMAIL = process.env.GMX_EMAIL || "xfclothing@gmx.de";
-const GMX_PASSWORD = process.env.GMX_PASSWORD || "";
+const BREVO_LOGIN = process.env.BREVO_LOGIN || "xfclothing@gmx.de";
+const BREVO_SMTP_KEY = process.env.BREVO_SMTP_KEY || "";
 
 const STAFF_EMAILS = ["xfclothing@gmx.de", "xaviermalucha@gmail.com"];
-const FROM = `XF Clothing <${GMX_EMAIL}>`;
+const FROM = `XF Clothing <${BREVO_LOGIN}>`;
 
 function createTransport() {
   return nodemailer.createTransport({
-    host: "mail.gmx.net",
-    port: 465,
-    secure: true,
-    auth: { user: GMX_EMAIL, pass: GMX_PASSWORD },
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+    auth: { user: BREVO_LOGIN, pass: BREVO_SMTP_KEY },
   });
 }
 
