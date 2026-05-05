@@ -17,26 +17,26 @@ const relaxedTeeGallery = {
   white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-essential-white-model.png"],
 };
 
-// XF Oversize Hoodie — BLANK/PLAIN
+// XF Oversize Hoodie — BLANK/PLAIN (own flat/folded images)
 const oversizeHoodieGallery = {
   black: [
     "/images/product-hoodie-oversize-black.png",
-    "/images/product-hoodie-black-flat.png",
-    "/images/product-hoodie-black-folded.png",
+    "/images/product-hoodie-oversize-black-flat.png",
+    "/images/product-hoodie-oversize-black-folded.png",
   ],
   grey: [
     "/images/product-hoodie-oversize-grey.png",
-    "/images/product-hoodie-grey-flat.png",
-    "/images/product-hoodie-grey-folded.png",
+    "/images/product-hoodie-oversize-grey-flat.png",
+    "/images/product-hoodie-oversize-black-folded.png",
   ],
   white: [
     "/images/product-hoodie-oversize-white.png",
-    "/images/product-hoodie-white-flat.png",
-    "/images/product-hoodie-white-folded.png",
+    "/images/product-hoodie-oversize-white-flat.png",
+    "/images/product-hoodie-oversize-black-folded.png",
   ],
 };
 
-// XF Oversized Hoodie — PANEL SEAM DESIGN (formerly Boxy)
+// XF Oversized Hoodie — X-PANEL SEAM DESIGN (formerly Boxy) — uses original images
 const oversizedHoodieGallery = {
   black: [
     "/images/product-hoodie-black.png",
@@ -55,21 +55,21 @@ const oversizedHoodieGallery = {
   ],
 };
 
-// XF Hoodie — DESIGN (formerly Cropped)
+// XF Hoodie — DESIGN (formerly Cropped) — own flat images
 const xfHoodieGallery = {
   black: [
     "/images/product-hoodie-xf-black.png",
-    "/images/product-hoodie-black-flat.png",
+    "/images/product-hoodie-xf-black-flat.png",
     "/images/product-hoodie-black-folded.png",
   ],
   grey: [
     "/images/product-hoodie-xf-grey.png",
-    "/images/product-hoodie-grey-flat.png",
+    "/images/product-hoodie-xf-grey-flat.png",
     "/images/product-hoodie-grey-folded.png",
   ],
   white: [
     "/images/product-hoodie-xf-white.png",
-    "/images/product-hoodie-white-flat.png",
+    "/images/product-hoodie-xf-white-flat.png",
     "/images/product-hoodie-white-folded.png",
   ],
 };
@@ -224,10 +224,10 @@ export const products = [
   // ─── HOODIES ────────────────────────────────────────────────
   {
     id: "xf-hoodie-oversized",
-    name: "XF Oversized Hoodie",
+    name: "XF Oversized Hoodie (Design)",
     category: "hoodie",
     price: 60,
-    description: "Oversized Fit. Big and roomy — pure streetwear statement. Panel seam detail. Heavy Cotton. Premium Quality.",
+    description: "Oversized Fit. Big and roomy — pure streetwear statement. Signature X-seam panel detail. Heavy Cotton. Premium Quality.",
     image: "/images/product-hoodie-black.png",
     sizes: ["S", "M", "L", "XL"],
     colors: oversizedHoodieColors(),

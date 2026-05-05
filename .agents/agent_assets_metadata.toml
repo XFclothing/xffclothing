@@ -245,19 +245,19 @@ title = "oversize hoodie blank white"
 id = "2RFepaoeiR2OZRPRq-8yr"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-black.png"
 type = "image"
-title = "xf hoodie seam design black"
+title = "xf hoodie design black proper"
 
 [[generated]]
 id = "SjCaVU1hdg3mJx7Et5Oo7"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-grey.png"
 type = "image"
-title = "xf hoodie seam design grey"
+title = "xf hoodie design grey proper"
 
 [[generated]]
 id = "wCbXy3_c06RdcnsrPIpf4"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-white.png"
 type = "image"
-title = "xf hoodie seam design white"
+title = "xf hoodie design white proper"
 
 [[generated]]
 id = "Y1GYe9sz_7RVZtZYA_TgG"
@@ -282,3 +282,45 @@ id = "PclkLRa59D_n7SP0x0CH5"
 uri = "file://artifacts/xf-store/public/images/product-tee-slim-black-model.png"
 type = "image"
 title = "slim tee stitching black model"
+
+[[generated]]
+id = "UmY2B2mgDuKYJGvfkXqre"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-black-flat.png"
+type = "image"
+title = "oversize hoodie plain black flat"
+
+[[generated]]
+id = "LX6zZSxpJ5ZqXnV48_9xt"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-grey-flat.png"
+type = "image"
+title = "oversize hoodie plain grey flat"
+
+[[generated]]
+id = "xReRXqXGKQ53hwIIwSG2y"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-white-flat.png"
+type = "image"
+title = "oversize hoodie plain white flat"
+
+[[generated]]
+id = "EoNA7ZlDVZo2jYqfeLybC"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-black-flat.png"
+type = "image"
+title = "xf hoodie design black flat"
+
+[[generated]]
+id = "yn6RjxsHJX5q8Fk8XampF"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-grey-flat.png"
+type = "image"
+title = "xf hoodie design grey flat"
+
+[[generated]]
+id = "B3ZdLo9uHpWM6IY1dp5Mq"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-white-flat.png"
+type = "image"
+title = "xf hoodie design white flat"
+
+[[generated]]
+id = "HwSF0lrVrRlfGKgFCRsp8"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-black-folded.png"
+type = "image"
+title = "oversize hoodie plain black folded"
