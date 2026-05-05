@@ -27,6 +27,7 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { StoreSettingsProvider } from "@/context/StoreSettingsContext";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ function App() {
       <LanguageProvider>
       <ThemeProvider>
         <AuthProvider>
+          <StoreSettingsProvider>
           <CartProvider>
             <TooltipProvider>
               <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
@@ -75,6 +77,7 @@ function App() {
               <Toaster />
             </TooltipProvider>
           </CartProvider>
+          </StoreSettingsProvider>
         </AuthProvider>
       </ThemeProvider>
       </LanguageProvider>

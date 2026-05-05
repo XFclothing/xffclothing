@@ -7,6 +7,7 @@ import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useLang } from "@/context/LanguageContext";
+import { useStoreSettings } from "@/context/StoreSettingsContext";
 
 type ColorVariant = {
   name: string;
@@ -57,6 +58,7 @@ export default function ProductDetail() {
   const [, navigate] = useLocation();
   const { addToCart } = useCart();
   const { t, lang } = useLang();
+  const { comingSoon, outOfStock, loaded } = useStoreSettings();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -103,6 +105,10 @@ export default function ProductDetail() {
     ?? (activeColor ? [activeColor.image, activeColor.backImage ?? activeColor.image] : [product.image]);
   const mainImage = activeColor ? activeColor.image : product.image;
   const cartName = colors ? `${product.name} — ${activeColor!.name}` : product.name;
+
+  const isComingSoon = loaded && comingSoon;
+  const isOutOfStock = loaded && !comingSoon && outOfStock.includes(product.id);
+  const unavailable = isComingSoon || isOutOfStock;
 
   function handleAddToCart() {
     if (product!.sizes.length > 0 && !selectedSize) {
@@ -298,7 +304,7 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {sizeError && (
+              {sizeError && !unavailable && (
                 <div className="flex items-center gap-3 border border-foreground/20 bg-foreground/5 px-4 py-3">
                   <span className="text-foreground/50 text-lg leading-none">↑</span>
                   <p className="text-xs uppercase tracking-[0.3em] text-foreground/70">
@@ -307,13 +313,23 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              <Button
-                size="lg"
-                className="w-full rounded-none h-14 uppercase tracking-widest text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
-                onClick={handleAddToCart}
-              >
-                {added ? t.product.addedToCart : t.product.addToCart}
-              </Button>
+              {unavailable ? (
+                <Button
+                  size="lg"
+                  disabled
+                  className="w-full rounded-none h-14 uppercase tracking-widest text-sm cursor-not-allowed opacity-40"
+                >
+                  {isComingSoon ? "Coming Soon" : "Out of Stock"}
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  className="w-full rounded-none h-14 uppercase tracking-widest text-sm bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
+                  onClick={handleAddToCart}
+                >
+                  {added ? t.product.addedToCart : t.product.addToCart}
+                </Button>
+              )}
 
               {/* Info Accordion */}
               <div className="mt-10 border-t border-border">

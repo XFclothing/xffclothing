@@ -4,6 +4,8 @@ import { useLocation } from "wouter";
 import { X, Plus, Trash2, Package } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase, Order, Ticket, TicketMessage, Admin } from "@/lib/supabase";
+import { useStoreSettings } from "@/context/StoreSettingsContext";
+import { products } from "@/data/products";
 
 const STATUSES = ["pending", "processing", "shipped", "completed"] as const;
 type OrderStatus = (typeof STATUSES)[number];
@@ -29,7 +31,8 @@ const DEFAULT_PERMS = { view_orders: true, manage_orders: false, manage_tickets:
 export default function Founder() {
   const { role, loading } = useAuth();
   const [, navigate] = useLocation();
-  const [tab, setTab] = useState<"workers" | "orders" | "delivered" | "old_orders" | "tickets" | "notify">("workers");
+  const { comingSoon, setComingSoon, outOfStock, toggleOutOfStock, loaded: settingsLoaded } = useStoreSettings();
+  const [tab, setTab] = useState<"workers" | "orders" | "delivered" | "old_orders" | "tickets" | "notify" | "shop">("workers");
 
   // Workers
   const [workers, setWorkers] = useState<Admin[]>([]);
@@ -309,7 +312,7 @@ export default function Founder() {
 
           {/* Tabs */}
           <div className="flex border-b border-foreground/10 mb-10 flex-wrap">
-            {(["workers", "orders", "delivered", "old_orders", "tickets", "notify"] as const).map((t) => (
+            {(["workers", "orders", "delivered", "old_orders", "tickets", "notify", "shop"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -323,6 +326,7 @@ export default function Founder() {
                 {t === "old_orders" && <>Old Orders <span className="text-foreground/25">({oldOrders.length})</span></>}
                 {t === "tickets" && <>Tickets <span className="text-foreground/30">({tickets.filter(tk => tk.status === "open").length})</span></>}
                 {t === "notify" && <>Notify <span className="text-foreground/30">({subscriberCount ?? "…"})</span></>}
+                {t === "shop" && <>Shop {comingSoon && <span className="text-orange-400/60 ml-1">● Live</span>}</>}
               </button>
             ))}
           </div>
@@ -633,6 +637,103 @@ export default function Founder() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Shop Tab */}
+          {tab === "shop" && (
+            <div className="space-y-10">
+
+              {/* Coming Soon Global Toggle */}
+              <div className="border border-foreground/10 p-6">
+                <div className="flex items-center justify-between gap-6">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.4em] text-foreground mb-1">Coming Soon Mode</p>
+                    <p className="text-[11px] text-foreground/35 leading-relaxed">
+                      When active, all products show "Coming Soon" and cannot be added to the cart.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => settingsLoaded && setComingSoon(!comingSoon)}
+                    disabled={!settingsLoaded}
+                    className={`relative w-12 h-6 rounded-full transition-colors duration-300 flex-shrink-0 disabled:opacity-40 ${
+                      comingSoon ? "bg-orange-400/80" : "bg-foreground/15"
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-300 ${
+                        comingSoon ? "translate-x-6" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                </div>
+                {comingSoon && (
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-orange-400/70 mt-4">
+                    ● Coming Soon mode is active — shop is locked
+                  </p>
+                )}
+              </div>
+
+              {/* Per-Product Out of Stock */}
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.5em] text-foreground/30 mb-5">
+                  Individual Products — Out of Stock
+                </p>
+                <div className="space-y-2">
+                  {products.map((product) => {
+                    const isOos = outOfStock.includes(product.id);
+                    return (
+                      <div
+                        key={product.id}
+                        className={`flex items-center justify-between gap-4 px-5 py-4 border transition-colors ${
+                          isOos ? "border-foreground/20 bg-foreground/3" : "border-foreground/6"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4 min-w-0">
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className={`w-10 h-12 object-cover flex-shrink-0 ${isOos ? "opacity-40" : ""}`}
+                          />
+                          <div className="min-w-0">
+                            <p className={`text-sm font-medium truncate ${isOos ? "text-foreground/40" : "text-foreground"}`}>
+                              {product.name}
+                            </p>
+                            <p className="text-[10px] uppercase tracking-widest text-foreground/25 mt-0.5">
+                              €{product.price}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          {isOos && (
+                            <span className="text-[10px] uppercase tracking-[0.35em] text-foreground/30">
+                              Out of Stock
+                            </span>
+                          )}
+                          <button
+                            onClick={() => settingsLoaded && toggleOutOfStock(product.id)}
+                            disabled={!settingsLoaded || comingSoon}
+                            className={`relative w-10 h-5 rounded-full transition-colors duration-300 disabled:opacity-30 ${
+                              isOos ? "bg-foreground/50" : "bg-foreground/12"
+                            }`}
+                          >
+                            <span
+                              className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300 ${
+                                isOos ? "translate-x-5" : "translate-x-0"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {comingSoon && (
+                  <p className="text-[10px] text-foreground/25 uppercase tracking-widest mt-4">
+                    Individual stock controls are disabled while Coming Soon mode is active.
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </motion.div>

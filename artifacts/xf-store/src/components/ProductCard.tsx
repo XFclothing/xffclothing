@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useStoreSettings } from "@/context/StoreSettingsContext";
 
 interface Color {
   name: string;
@@ -23,9 +24,14 @@ interface ProductCardProps {
 export function ProductCard({ product, index }: ProductCardProps) {
   const [, navigate] = useLocation();
   const [hoveredColor, setHoveredColor] = useState<number | null>(null);
+  const { comingSoon, outOfStock, loaded } = useStoreSettings();
 
   const colors = product.colors;
   const displayImage = colors && hoveredColor !== null ? colors[hoveredColor].image : product.image;
+
+  const isComingSoon = loaded && comingSoon;
+  const isOutOfStock = loaded && !comingSoon && outOfStock.includes(product.id);
+  const unavailable = isComingSoon || isOutOfStock;
 
   return (
     <motion.div
@@ -41,9 +47,16 @@ export function ProductCard({ product, index }: ProductCardProps) {
           src={displayImage}
           alt={product.name}
           loading="lazy"
-          className="object-cover w-full h-full transition-all duration-500 ease-out group-hover:scale-105"
+          className={`object-cover w-full h-full transition-all duration-500 ease-out group-hover:scale-105 ${unavailable ? "opacity-50" : ""}`}
         />
         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        {unavailable && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-[10px] uppercase tracking-[0.5em] text-white/90 bg-black/60 px-4 py-2 backdrop-blur-sm">
+              {isComingSoon ? "Coming Soon" : "Out of Stock"}
+            </span>
+          </div>
+        )}
       </Link>
 
       <div className="flex flex-col gap-2">
@@ -54,7 +67,6 @@ export function ProductCard({ product, index }: ProductCardProps) {
           <span className="text-muted-foreground">€{product.price}</span>
         </div>
 
-        {/* Color swatches */}
         {colors && colors.length > 0 && (
           <div className="flex gap-2 items-center">
             {colors.map((color, idx) => (
@@ -74,13 +86,23 @@ export function ProductCard({ product, index }: ProductCardProps) {
           </div>
         )}
 
-        <Button
-          variant="outline"
-          className="w-full uppercase tracking-widest rounded-none border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-          onClick={() => navigate(`/shop/${product.id}`)}
-        >
-          Select Size
-        </Button>
+        {unavailable ? (
+          <Button
+            variant="outline"
+            disabled
+            className="w-full uppercase tracking-widest rounded-none border-primary/10 text-foreground/30 cursor-not-allowed"
+          >
+            {isComingSoon ? "Coming Soon" : "Out of Stock"}
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            className="w-full uppercase tracking-widest rounded-none border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+            onClick={() => navigate(`/shop/${product.id}`)}
+          >
+            Select Size
+          </Button>
+        )}
       </div>
     </motion.div>
   );
