@@ -223,3 +223,13 @@
 :is(.light) .text-foreground\/50 { color: hsl(0,0%,18%) !important; }
 :is(.light) .text-foreground\/60 { color: hsl(0,0%,12%) !important; }
 :is(.light) .text-foreground\/70 { color: hsl(0,0%,8%) !important; }
+
+/* ── Boost low-opacity foreground text visibility in dark mode ── */
+:is(.dark) .text-foreground\/\[0\.03\] { color: rgba(245,245,245,0.08) !important; }
+:is(.dark) .text-foreground\/10 { color: rgba(245,245,245,0.22) !important; }
+:is(.dark) .text-foreground\/15 { color: rgba(245,245,245,0.28) !important; }
+:is(.dark) .text-foreground\/20 { color: rgba(245,245,245,0.38) !important; }
+:is(.dark) .text-foreground\/25 { color: rgba(245,245,245,0.44) !important; }
+:is(.dark) .text-foreground\/30 { color: rgba(245,245,245,0.52) !important; }
+:is(.dark) .text-foreground\/35 { color: rgba(245,245,245,0.58) !important; }
+:is(.dark) .text-foreground\/40 { color: rgba(245,245,245,0.62) !important; }

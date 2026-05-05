@@ -82,15 +82,6 @@ export default function Home() {
             {t.home.releasingSoon}
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.05 }}
-            className="text-[11px] uppercase tracking-[0.35em] text-foreground/25 mb-16"
-          >
-            {t.home.by}
-          </motion.p>
-
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
