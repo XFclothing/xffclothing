@@ -1,22 +1,12 @@
 import { Router } from "express";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 const router = Router();
 
-const BREVO_LOGIN = process.env.BREVO_LOGIN || "xfclothing@gmx.de";
-const BREVO_SMTP_KEY = process.env.BREVO_SMTP_KEY || "";
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const STAFF_EMAILS = ["xfclothing@gmx.de", "xaviermalucha@gmail.com"];
-const FROM = `XF Clothing <${BREVO_LOGIN}>`;
-
-function createTransport() {
-  return nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
-    auth: { user: BREVO_LOGIN, pass: BREVO_SMTP_KEY },
-  });
-}
+const FROM = "XF Clothing <onboarding@resend.dev>";
 
 const otpStore = new Map<string, { code: string; expires: number }>();
 
@@ -34,7 +24,7 @@ router.post("/email/send-otp", async (req, res) => {
   otpStore.set(email.toLowerCase(), { code, expires: Date.now() + 5 * 60 * 1000 });
 
   try {
-    await createTransport().sendMail({
+    await resend.emails.send({
       from: FROM,
       to: email,
       subject: "XF — Verification Code",
@@ -81,34 +71,26 @@ router.post("/email/verify-otp", async (req, res) => {
 router.post("/email/order", async (req, res) => {
   const { customerEmail, customerName, orderId, total, shippingAddress, items, workerEmails } = req.body;
 
-  const itemsList = (items || [])
-    .map((i: any) => `${i.name} (${i.size}) x${i.quantity} — €${(i.price * i.quantity).toFixed(2)}`)
-    .join("\n");
-
   const allStaff = [...new Set([...STAFF_EMAILS, ...(workerEmails || [])])];
-  const transport = createTransport();
 
-  try {
-    const itemsHtml = (items || [])
-      .map(
-        (i: any) => `
-        <tr>
-          <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.75);font-size:13px;">${i.name}</td>
-          <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:12px;text-align:center;">${i.size}</td>
-          <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:12px;text-align:center;">×${i.quantity}</td>
-          <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:#fff;font-size:13px;text-align:right;">€${(i.price * i.quantity).toFixed(2)}</td>
-        </tr>`
-      )
-      .join("");
+  const itemsHtml = (items || [])
+    .map(
+      (i: any) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.75);font-size:13px;">${i.name}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:12px;text-align:center;">${i.size}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:12px;text-align:center;">×${i.quantity}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:#fff;font-size:13px;text-align:right;">€${(i.price * i.quantity).toFixed(2)}</td>
+      </tr>`
+    )
+    .join("");
 
-    const customerHtml = `
+  const customerHtml = `
 <div style="background:#000;color:#fff;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;">
   <div style="max-width:520px;margin:0 auto;padding:56px 40px;">
     <p style="font-size:10px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 48px;">XF — Order Confirmed</p>
-
     <h1 style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff;margin:0 0 8px;">Thank You${customerName ? ", " + customerName : ""}.</h1>
     <p style="font-size:13px;color:rgba(255,255,255,0.45);margin:0 0 40px;line-height:1.7;">Your order has been received. We'll be in touch to confirm shipment.</p>
-
     <div style="border:1px solid rgba(255,255,255,0.08);padding:24px;margin-bottom:24px;">
       <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 16px;">Order Details</p>
       <table style="width:100%;border-collapse:collapse;">
@@ -127,33 +109,27 @@ router.post("/email/order", async (req, res) => {
         <span style="font-size:18px;font-weight:700;color:#fff;">€${Number(total).toFixed(2)}</span>
       </div>
     </div>
-
     <div style="border:1px solid rgba(255,255,255,0.08);padding:24px;margin-bottom:40px;">
       <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 8px;">Shipping To</p>
       <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0;line-height:1.6;">${shippingAddress}</p>
     </div>
-
     <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0 0 4px;">Order Reference</p>
     <p style="font-size:11px;color:rgba(255,255,255,0.25);margin:0 0 48px;font-family:monospace;">#${String(orderId).slice(0, 8).toUpperCase()}</p>
-
     <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0;">XF by Xavier &amp; Fynn</p>
   </div>
 </div>`;
 
-    const staffHtml = `
+  const staffHtml = `
 <div style="background:#0a0a0a;color:#fff;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;">
   <div style="max-width:520px;margin:0 auto;padding:48px 40px;">
     <p style="font-size:10px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:0 0 32px;">XF — New Order</p>
-
     <h1 style="font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff;margin:0 0 6px;">New Order Received</h1>
     <p style="font-size:13px;color:rgba(255,255,255,0.4);margin:0 0 32px;line-height:1.6;">A customer has placed a new order.</p>
-
     <div style="border:1px solid rgba(255,255,255,0.08);padding:20px 24px;margin-bottom:16px;">
       <p style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:0 0 12px;">Customer</p>
       <p style="font-size:14px;color:#fff;margin:0 0 4px;font-weight:600;">${customerName}</p>
       <p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0;">${customerEmail}</p>
     </div>
-
     <div style="border:1px solid rgba(255,255,255,0.08);padding:20px 24px;margin-bottom:16px;">
       <p style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:0 0 14px;">Items</p>
       <table style="width:100%;border-collapse:collapse;">
@@ -165,38 +141,26 @@ router.post("/email/order", async (req, res) => {
           <td style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:#fff;font-size:13px;text-align:right;">€${(i.price * i.quantity).toFixed(2)}</td>
         </tr>`).join("")}
       </table>
-      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;">
-        <span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Total</span>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);">
+        <span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Total: </span>
         <span style="font-size:16px;font-weight:700;color:#fff;">€${Number(total).toFixed(2)}</span>
       </div>
     </div>
-
     <div style="border:1px solid rgba(255,255,255,0.08);padding:20px 24px;margin-bottom:32px;">
       <p style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin:0 0 8px;">Ship To</p>
       <p style="font-size:13px;color:rgba(255,255,255,0.55);margin:0;line-height:1.6;">${shippingAddress}</p>
     </div>
-
     <p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0 0 3px;">Order Ref</p>
     <p style="font-size:11px;color:rgba(255,255,255,0.2);margin:0 0 40px;font-family:monospace;">#${String(orderId).slice(0, 8).toUpperCase()}</p>
-
     <p style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.12);margin:0;">XF by Xavier &amp; Fynn</p>
   </div>
 </div>`;
 
+  try {
     await Promise.all([
-      transport.sendMail({
-        from: FROM,
-        to: customerEmail,
-        subject: "Order Confirmed — XF Clothing",
-        html: customerHtml,
-      }),
+      resend.emails.send({ from: FROM, to: customerEmail, subject: "Order Confirmed — XF Clothing", html: customerHtml }),
       ...allStaff.map((email) =>
-        transport.sendMail({
-          from: FROM,
-          to: email,
-          subject: `New Order — ${customerName}`,
-          html: staffHtml,
-        })
+        resend.emails.send({ from: FROM, to: email, subject: `New Order — ${customerName}`, html: staffHtml })
       ),
     ]);
     res.json({ ok: true });
@@ -210,12 +174,11 @@ router.post("/email/ticket", async (req, res) => {
   const { customerEmail, customerName, subject, message, workerEmails } = req.body;
 
   const allStaff = [...new Set([...STAFF_EMAILS, ...(workerEmails || [])])];
-  const transport = createTransport();
 
   try {
     await Promise.all(
       allStaff.map((email) =>
-        transport.sendMail({
+        resend.emails.send({
           from: FROM,
           to: email,
           subject: `New Support Ticket — ${subject}`,
@@ -237,7 +200,7 @@ router.post("/email/newsletter-confirm", async (req, res) => {
     return;
   }
   try {
-    await createTransport().sendMail({
+    await resend.emails.send({
       from: FROM,
       to: email,
       subject: "XF — You're on the list",
@@ -291,10 +254,9 @@ router.post("/email/notify-subscribers", async (req, res) => {
   <p style="font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;margin:0;">XF by Xavier &amp; Fynn</p>
 </div>`;
 
-    const transport = createTransport();
     await Promise.all(
       emails.map((to) =>
-        transport.sendMail({ from: FROM, to, subject: `XF — ${subject}`, html: htmlBody })
+        resend.emails.send({ from: FROM, to, subject: `XF — ${subject}`, html: htmlBody })
       )
     );
 
