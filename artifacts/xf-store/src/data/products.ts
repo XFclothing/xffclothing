@@ -1,23 +1,43 @@
 // ─── HELPER: color galleries ────────────────────────────────
 const essentialTeeGallery = {
-  black: ["/images/product-tee-essential-black.png", "/images/product-tee-black-model.png"],
-  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-grey-model.png"],
-  white: ["/images/product-tee-essential-white.png", "/images/product-tee-white-model.png"],
+  black: ["/images/product-tee-essential-black.png", "/images/product-tee-essential-black-model.png"],
+  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-essential-grey-model.png"],
+  white: ["/images/product-tee-essential-white.png", "/images/product-tee-essential-white-model.png"],
 };
 
 const slimTeeGallery = {
-  black: ["/images/product-tee-slim-black.png", "/images/product-tee-black-model.png"],
-  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-grey-model.png"],
-  white: ["/images/product-tee-slim-white.png", "/images/product-tee-white-model.png"],
+  black: ["/images/product-tee-slim-black.png", "/images/product-tee-slim-black-model.png"],
+  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-essential-grey-model.png"],
+  white: ["/images/product-tee-slim-white.png", "/images/product-tee-essential-white-model.png"],
 };
 
 const relaxedTeeGallery = {
-  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-black-model.png"],
-  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-grey-model.png"],
-  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-white-model.png"],
+  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-essential-black-model.png"],
+  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-essential-grey-model.png"],
+  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-essential-white-model.png"],
 };
 
-const hoodieGallery = {
+// XF Oversize Hoodie — BLANK/PLAIN
+const oversizeHoodieGallery = {
+  black: [
+    "/images/product-hoodie-oversize-black.png",
+    "/images/product-hoodie-black-flat.png",
+    "/images/product-hoodie-black-folded.png",
+  ],
+  grey: [
+    "/images/product-hoodie-oversize-grey.png",
+    "/images/product-hoodie-grey-flat.png",
+    "/images/product-hoodie-grey-folded.png",
+  ],
+  white: [
+    "/images/product-hoodie-oversize-white.png",
+    "/images/product-hoodie-white-flat.png",
+    "/images/product-hoodie-white-folded.png",
+  ],
+};
+
+// XF Oversized Hoodie — PANEL SEAM DESIGN (formerly Boxy)
+const oversizedHoodieGallery = {
   black: [
     "/images/product-hoodie-black.png",
     "/images/product-hoodie-black-flat.png",
@@ -35,6 +55,24 @@ const hoodieGallery = {
   ],
 };
 
+// XF Hoodie — DESIGN (formerly Cropped)
+const xfHoodieGallery = {
+  black: [
+    "/images/product-hoodie-xf-black.png",
+    "/images/product-hoodie-black-flat.png",
+    "/images/product-hoodie-black-folded.png",
+  ],
+  grey: [
+    "/images/product-hoodie-xf-grey.png",
+    "/images/product-hoodie-grey-flat.png",
+    "/images/product-hoodie-grey-folded.png",
+  ],
+  white: [
+    "/images/product-hoodie-xf-white.png",
+    "/images/product-hoodie-white-flat.png",
+    "/images/product-hoodie-white-folded.png",
+  ],
+};
 
 const baggyJoggerGallery = {
   black: [
@@ -98,14 +136,29 @@ function relaxedTeeColors() {
   ];
 }
 
-function hoodieColors() {
+function oversizeHoodieColors() {
   return [
-    { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-black.png", gallery: hoodieGallery.black },
-    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-grey.png",  gallery: hoodieGallery.grey  },
-    { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-white.png", gallery: hoodieGallery.white },
+    { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-oversize-black.png", gallery: oversizeHoodieGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-oversize-grey.png",  gallery: oversizeHoodieGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-oversize-white.png", gallery: oversizeHoodieGallery.white },
   ];
 }
 
+function oversizedHoodieColors() {
+  return [
+    { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-black.png", gallery: oversizedHoodieGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-grey.png",  gallery: oversizedHoodieGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-white.png", gallery: oversizedHoodieGallery.white },
+  ];
+}
+
+function xfHoodieColors() {
+  return [
+    { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-xf-black.png", gallery: xfHoodieGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-xf-grey.png",  gallery: xfHoodieGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-xf-white.png", gallery: xfHoodieGallery.white },
+  ];
+}
 
 function sideStripeColors() {
   return [
@@ -171,33 +224,33 @@ export const products = [
   // ─── HOODIES ────────────────────────────────────────────────
   {
     id: "xf-hoodie-oversized",
-    name: "XF Oversize Hoodie",
+    name: "XF Oversized Hoodie",
     category: "hoodie",
     price: 60,
-    description: "Oversized Fit. Big and roomy — streetwear statement. Heavy Cotton. Premium Quality.",
-    image: "/images/product-hoodie-black.webp",
+    description: "Oversized Fit. Big and roomy — pure streetwear statement. Panel seam detail. Heavy Cotton. Premium Quality.",
+    image: "/images/product-hoodie-black.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: hoodieColors(),
+    colors: oversizedHoodieColors(),
   },
   {
-    id: "xf-hoodie-boxy",
-    name: "XF Boxy Hoodie",
+    id: "xf-hoodie-oversize",
+    name: "XF Oversize Hoodie",
     category: "hoodie",
     price: 58,
-    description: "Boxy Fit. Wide and cropped — modern look. Heavy Cotton. Premium Quality.",
-    image: "/images/product-hoodie-grey.webp",
+    description: "Oversize Fit. Clean and minimal — timeless streetwear essential. Heavy Cotton. Premium Quality.",
+    image: "/images/product-hoodie-oversize-black.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: hoodieColors(),
+    colors: oversizeHoodieColors(),
   },
   {
     id: "xf-hoodie-cropped",
-    name: "XF Cropped Hoodie",
+    name: "XF Hoodie",
     category: "hoodie",
     price: 52,
-    description: "Cropped Fit. Short cut — trendy fashion piece. Heavy Cotton. Premium Quality.",
-    image: "/images/product-hoodie-black.webp",
+    description: "Regular Fit. Signature seam detail — distinctive XF design. Heavy Cotton. Premium Quality.",
+    image: "/images/product-hoodie-xf-black.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: hoodieColors(),
+    colors: xfHoodieColors(),
   },
 
   // ─── JOGGER ─────────────────────────────────────────────────

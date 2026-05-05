@@ -222,3 +222,63 @@ id = "Bbg54Bsgfq4B5bg4oDHEp"
 uri = "file://attached_assets/generated_images/generated_image.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "gCq4B6z_09f0TpeMme0t2"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-black.png"
+type = "image"
+title = "oversize hoodie blank black"
+
+[[generated]]
+id = "r7222NNU7yq4ICfjVqCvK"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-grey.png"
+type = "image"
+title = "oversize hoodie blank grey"
+
+[[generated]]
+id = "okCy00c68ctjTufkBUvAV"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-white.png"
+type = "image"
+title = "oversize hoodie blank white"
+
+[[generated]]
+id = "2RFepaoeiR2OZRPRq-8yr"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-black.png"
+type = "image"
+title = "xf hoodie seam design black"
+
+[[generated]]
+id = "SjCaVU1hdg3mJx7Et5Oo7"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-grey.png"
+type = "image"
+title = "xf hoodie seam design grey"
+
+[[generated]]
+id = "wCbXy3_c06RdcnsrPIpf4"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-white.png"
+type = "image"
+title = "xf hoodie seam design white"
+
+[[generated]]
+id = "Y1GYe9sz_7RVZtZYA_TgG"
+uri = "file://artifacts/xf-store/public/images/product-tee-essential-black-model.png"
+type = "image"
+title = "essential tee plain black model"
+
+[[generated]]
+id = "RHqBBya20kbNlMIcYfBfm"
+uri = "file://artifacts/xf-store/public/images/product-tee-essential-grey-model.png"
+type = "image"
+title = "essential tee plain grey model"
+
+[[generated]]
+id = "haMYrBgje58yu7M_KqXS-"
+uri = "file://artifacts/xf-store/public/images/product-tee-essential-white-model.png"
+type = "image"
+title = "essential tee plain white model"
+
+[[generated]]
+id = "PclkLRa59D_n7SP0x0CH5"
+uri = "file://artifacts/xf-store/public/images/product-tee-slim-black-model.png"
+type = "image"
+title = "slim tee stitching black model"
