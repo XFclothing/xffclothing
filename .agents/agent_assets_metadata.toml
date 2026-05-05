@@ -11,7 +11,7 @@ title = "baggy jogger black worn"
 id = "qoJbfLvcJR6OtaIGXGzSZ"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-flat.png"
 type = "image"
-title = "baggy jogger black folded flat lay"
+title = "baggy jogger black folded no elastic"
 
 [[generated]]
 id = "jtNpYNB35xgq8Up5j-Qwe"
@@ -23,7 +23,7 @@ title = "baggy jogger grey worn"
 id = "HcMV6tGzkq0vUDzCQoy-q"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-flat.png"
 type = "image"
-title = "baggy jogger grey folded flat lay"
+title = "baggy jogger grey folded no elastic"
 
 [[generated]]
 id = "IhnEeEwqHF06_Bw728d4Z"
@@ -35,4 +35,4 @@ title = "baggy jogger white worn"
 id = "4i8SYDFgWsYlay8akQDGI"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-flat.png"
 type = "image"
-title = "baggy jogger white folded flat lay"
+title = "baggy jogger white folded no elastic"
