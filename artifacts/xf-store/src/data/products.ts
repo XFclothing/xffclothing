@@ -1,20 +1,20 @@
 // ─── HELPER: color galleries ────────────────────────────────
 const essentialTeeGallery = {
-  black: ["/images/product-tee-essential-black.png", "/images/product-tee-black-back.webp"],
-  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-grey-back.webp"],
-  white: ["/images/product-tee-essential-white.png", "/images/product-tee-white-back.webp"],
+  black: ["/images/product-tee-essential-black.png", "/images/product-tee-black-model.png"],
+  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-grey-model.png"],
+  white: ["/images/product-tee-essential-white.png", "/images/product-tee-white-model.png"],
 };
 
 const slimTeeGallery = {
-  black: ["/images/product-tee-slim-black.png", "/images/product-tee-black-back.webp"],
-  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-grey-back.webp"],
-  white: ["/images/product-tee-slim-white.png", "/images/product-tee-white-back.webp"],
+  black: ["/images/product-tee-slim-black.png", "/images/product-tee-black-model.png"],
+  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-grey-model.png"],
+  white: ["/images/product-tee-slim-white.png", "/images/product-tee-white-model.png"],
 };
 
 const relaxedTeeGallery = {
-  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-black-back.webp"],
-  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-grey-back.webp"],
-  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-white-back.webp"],
+  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-black-model.png"],
+  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-grey-model.png"],
+  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-white-model.png"],
 };
 
 const hoodieGallery = {

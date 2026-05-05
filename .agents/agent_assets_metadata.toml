@@ -216,3 +216,9 @@ id = "PpatWPNk2KlEnW77Uzfln"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-white-folded.png"
 type = "image"
 title = "white hoodie folded"
+
+[[generated]]
+id = "Bbg54Bsgfq4B5bg4oDHEp"
+uri = "file://attached_assets/generated_images/generated_image.png"
+type = "image"
+title = "generated_image"
