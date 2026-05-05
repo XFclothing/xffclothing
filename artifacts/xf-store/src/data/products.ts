@@ -1,20 +1,20 @@
 // ─── HELPER: color galleries ────────────────────────────────
 const essentialTeeGallery = {
-  black: ["/images/product-tee-essential-black.png", "/images/product-tee-essential-black-model.png"],
-  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-essential-grey-model.png"],
-  white: ["/images/product-tee-essential-white.png", "/images/product-tee-essential-white-model.png"],
+  black: ["/images/product-tee-essential-black.png", "/images/product-tee-essential-black-model.png", "/images/product-tee-black-back.png"],
+  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-essential-grey-model.png",  "/images/product-tee-grey-back.png"],
+  white: ["/images/product-tee-essential-white.png", "/images/product-tee-essential-white-model.png", "/images/product-tee-white-back.png"],
 };
 
 const slimTeeGallery = {
-  black: ["/images/product-tee-slim-black.png", "/images/product-tee-slim-black-model.png"],
-  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-slim-grey-model.png"],
-  white: ["/images/product-tee-slim-white.png", "/images/product-tee-slim-white-model.png"],
+  black: ["/images/product-tee-slim-black.png", "/images/product-tee-slim-black-model.png", "/images/product-tee-black-back.png"],
+  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-slim-grey-model.png",  "/images/product-tee-grey-back.png"],
+  white: ["/images/product-tee-slim-white.png", "/images/product-tee-slim-white-model.png", "/images/product-tee-white-back.png"],
 };
 
 const relaxedTeeGallery = {
-  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-relaxed-black-model.png"],
-  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-relaxed-grey-model.png"],
-  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-relaxed-white-model.png"],
+  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-relaxed-black-model.png", "/images/product-tee-black-back.png"],
+  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-relaxed-grey-model.png",  "/images/product-tee-grey-back.png"],
+  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-relaxed-white-model.png", "/images/product-tee-white-back.png"],
 };
 
 // XF Oversize Hoodie — BLANK/PLAIN
