@@ -5,52 +5,52 @@ outputs = []
 id = "UMo75sG4KNANhPZ2_bjzt"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black.png"
 type = "image"
-title = "baggy jogger black worn"
+title = "baggy jogger black on model"
 
 [[generated]]
 id = "qoJbfLvcJR6OtaIGXGzSZ"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-flat.png"
 type = "image"
-title = "black wide leg sweatpants flat no slit"
+title = "baggy jogger black flat lay"
 
 [[generated]]
 id = "jtNpYNB35xgq8Up5j-Qwe"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey.png"
 type = "image"
-title = "baggy jogger grey worn"
+title = "baggy jogger grey on model"
 
 [[generated]]
 id = "HcMV6tGzkq0vUDzCQoy-q"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-flat.png"
 type = "image"
-title = "grey wide leg sweatpants flat no slit"
+title = "baggy jogger grey flat lay"
 
 [[generated]]
 id = "IhnEeEwqHF06_Bw728d4Z"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white.png"
 type = "image"
-title = "baggy jogger white worn open hem"
+title = "baggy jogger white on model"
 
 [[generated]]
 id = "4i8SYDFgWsYlay8akQDGI"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-flat.png"
 type = "image"
-title = "white wide leg sweatpants flat no slit"
+title = "baggy jogger white flat lay"
 
 [[generated]]
 id = "7p_OrSjTcZy8Z8thBfaaV"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-folded.png"
 type = "image"
-title = "black wide leg sweatpants half folded"
+title = "baggy jogger black back view"
 
 [[generated]]
 id = "aeRdhU_6y1wq3UcfXfMDP"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-folded.png"
 type = "image"
-title = "grey wide leg sweatpants half folded"
+title = "baggy jogger grey back view"
 
 [[generated]]
 id = "ndygn14CwKyXktJ1zfKfg"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-folded.png"
 type = "image"
-title = "white wide leg sweatpants half folded"
+title = "baggy jogger white back view"
