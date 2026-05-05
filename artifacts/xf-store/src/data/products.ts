@@ -1,17 +1,20 @@
 // ─── HELPER: color galleries ────────────────────────────────
-const teeGallery = {
-  black: [
-    "/images/product-tee-black.webp",
-    "/images/product-tee-black-back.webp",
-  ],
-  grey: [
-    "/images/product-tee-grey.webp",
-    "/images/product-tee-grey-back.webp",
-  ],
-  white: [
-    "/images/product-tee-white.webp",
-    "/images/product-tee-white-back.webp",
-  ],
+const essentialTeeGallery = {
+  black: ["/images/product-tee-essential-black.png", "/images/product-tee-black-back.webp"],
+  grey:  ["/images/product-tee-essential-grey.png",  "/images/product-tee-grey-back.webp"],
+  white: ["/images/product-tee-essential-white.png", "/images/product-tee-white-back.webp"],
+};
+
+const slimTeeGallery = {
+  black: ["/images/product-tee-slim-black.png", "/images/product-tee-black-back.webp"],
+  grey:  ["/images/product-tee-slim-grey.png",  "/images/product-tee-grey-back.webp"],
+  white: ["/images/product-tee-slim-white.png", "/images/product-tee-white-back.webp"],
+};
+
+const relaxedTeeGallery = {
+  black: ["/images/product-tee-relaxed-black.png", "/images/product-tee-black-back.webp"],
+  grey:  ["/images/product-tee-relaxed-grey.png",  "/images/product-tee-grey-back.webp"],
+  white: ["/images/product-tee-relaxed-white.png", "/images/product-tee-white-back.webp"],
 };
 
 const hoodieGallery = {
@@ -70,11 +73,27 @@ const sideStripeGallery = {
 };
 
 // ─── SHARED COLOR DEFINITIONS ───────────────────────────────
-function teeColors(defaultColor: "black" | "white") {
+function essentialTeeColors() {
   return [
-    { name: "Black", value: "#1a1a1a", image: "/images/product-tee-black.webp", gallery: teeGallery.black },
-    { name: "Grey",  value: "#888888", image: "/images/product-tee-grey.webp",  gallery: teeGallery.grey  },
-    { name: "White", value: "#f5f5f5", image: "/images/product-tee-white.webp", gallery: teeGallery.white },
+    { name: "Black", value: "#1a1a1a", image: "/images/product-tee-essential-black.png", gallery: essentialTeeGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-tee-essential-grey.png",  gallery: essentialTeeGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-tee-essential-white.png", gallery: essentialTeeGallery.white },
+  ];
+}
+
+function slimTeeColors() {
+  return [
+    { name: "Black", value: "#1a1a1a", image: "/images/product-tee-slim-black.png", gallery: slimTeeGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-tee-slim-grey.png",  gallery: slimTeeGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-tee-slim-white.png", gallery: slimTeeGallery.white },
+  ];
+}
+
+function relaxedTeeColors() {
+  return [
+    { name: "Black", value: "#1a1a1a", image: "/images/product-tee-relaxed-black.png", gallery: relaxedTeeGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-tee-relaxed-grey.png",  gallery: relaxedTeeGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-tee-relaxed-white.png", gallery: relaxedTeeGallery.white },
   ];
 }
 
@@ -103,9 +122,9 @@ export const featured = [
     category: "tshirt",
     price: 35,
     description: "Regular Fit. Classic cut for everyday wear. 100% Heavyweight Cotton. Unisex.",
-    image: "/images/product-tee-white.webp",
+    image: "/images/product-tee-essential-white.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: teeColors("white"),
+    colors: essentialTeeColors(),
   },
   {
     id: "xf-jogger-baggy",
@@ -133,9 +152,9 @@ export const products = [
     category: "tshirt",
     price: 33,
     description: "Slim Fit. Close to the body — athletic look. 100% Heavyweight Cotton.",
-    image: "/images/product-tee-black.webp",
+    image: "/images/product-tee-slim-black.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: teeColors("black"),
+    colors: slimTeeColors(),
   },
   {
     id: "xf-tee-relaxed",
@@ -143,9 +162,9 @@ export const products = [
     category: "tshirt",
     price: 38,
     description: "Relaxed Fit. Comfortable and easy-going — effortless everyday style. 100% Heavyweight Cotton.",
-    image: "/images/product-tee-black.webp",
+    image: "/images/product-tee-relaxed-black.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: teeColors("black"),
+    colors: relaxedTeeColors(),
   },
 
   // ─── HOODIES ────────────────────────────────────────────────
