@@ -157,7 +157,7 @@ export default function ProductDetail() {
                     {gallery.map((img, idx) => (
                       <div
                         key={idx}
-                        className="flex-none w-full aspect-[3/4] bg-muted relative overflow-hidden"
+                        className="flex-none w-full aspect-[3/4] bg-white relative overflow-hidden"
                       >
                         <img
                           src={img}
@@ -214,7 +214,7 @@ export default function ProductDetail() {
                   <button
                     key={idx}
                     onClick={() => emblaApi?.scrollTo(idx)}
-                    className={`flex-none w-16 aspect-[3/4] bg-muted overflow-hidden border-2 transition-all ${
+                    className={`flex-none w-16 aspect-[3/4] bg-white overflow-hidden border-2 transition-all ${
                       activeSlide === idx ? "border-foreground" : "border-transparent opacity-50 hover:opacity-80"
                     }`}
                   >

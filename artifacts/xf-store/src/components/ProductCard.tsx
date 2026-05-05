@@ -53,7 +53,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
     >
       <Link
         href={`/shop/${product.id}`}
-        className="aspect-[3/4] relative overflow-hidden bg-muted cursor-pointer"
+        className="aspect-[3/4] relative overflow-hidden bg-white cursor-pointer"
         onMouseEnter={() => setCardHovered(true)}
         onMouseLeave={() => setCardHovered(false)}
       >
