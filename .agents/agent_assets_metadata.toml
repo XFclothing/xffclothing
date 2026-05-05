@@ -11,7 +11,7 @@ title = "baggy jogger black on model"
 id = "qoJbfLvcJR6OtaIGXGzSZ"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-flat.png"
 type = "image"
-title = "baggy jogger black flat lay"
+title = "baggy jogger black flat lay open hem"
 
 [[generated]]
 id = "jtNpYNB35xgq8Up5j-Qwe"
@@ -23,7 +23,7 @@ title = "baggy jogger grey on model"
 id = "HcMV6tGzkq0vUDzCQoy-q"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-flat.png"
 type = "image"
-title = "baggy jogger grey flat lay"
+title = "baggy jogger grey flat lay open hem"
 
 [[generated]]
 id = "IhnEeEwqHF06_Bw728d4Z"
@@ -41,16 +41,16 @@ title = "baggy jogger white flat lay"
 id = "7p_OrSjTcZy8Z8thBfaaV"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-black-folded.png"
 type = "image"
-title = "baggy jogger black back view"
+title = "baggy jogger black side view"
 
 [[generated]]
 id = "aeRdhU_6y1wq3UcfXfMDP"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-grey-folded.png"
 type = "image"
-title = "baggy jogger grey back view"
+title = "baggy jogger grey side view"
 
 [[generated]]
 id = "ndygn14CwKyXktJ1zfKfg"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-folded.png"
 type = "image"
-title = "baggy jogger white back view"
+title = "baggy jogger white side view"
