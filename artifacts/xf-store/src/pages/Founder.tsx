@@ -149,7 +149,16 @@ export default function Founder() {
       ...o,
       profiles: o.user_id ? profileMap[o.user_id] ?? null : null,
     }));
-    setOrders(ordersWithProfiles as Order[]);
+    // Auto-delete cancelled orders that moved to old_orders and are older than 1 hour
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const toDelete = ordersWithProfiles.filter(
+      (o) => o.status === "old_orders" && (o as any).cancellation_reason && o.created_at < oneHourAgo
+    );
+    if (toDelete.length > 0) {
+      await supabase.from("order_items").delete().in("order_id", toDelete.map((o) => o.id));
+      await supabase.from("orders").delete().in("id", toDelete.map((o) => o.id));
+    }
+    setOrders(ordersWithProfiles.filter((o) => !toDelete.find((d) => d.id === o.id)) as Order[]);
     setOrdersLoading(false);
   }
 
@@ -182,28 +191,58 @@ export default function Founder() {
         ? { ...prev, status: "cancelled" as any, cancellation_reason: founderCancelReason.trim() }
         : prev
     );
+    // Move to old_orders so it appears in Old Orders tab
+    await supabase.from("orders").update({ status: "old_orders" }).eq("id", founderCancelOrderId);
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id === founderCancelOrderId ? { ...o, status: "old_orders" as any } : o
+      )
+    );
+    setActiveOrder((prev) =>
+      prev && prev.id === founderCancelOrderId ? { ...prev, status: "old_orders" as any } : prev
+    );
     // Send cancellation email to customer
     if (cancelledOrder) {
       try {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("email, name")
-          .eq("id", cancelledOrder.user_id)
-          .single();
-        if (profileData?.email) {
+        const profile = (cancelledOrder as any).profiles;
+        const email = profile?.email;
+        const name = profile?.name || "";
+        if (email) {
           const baseUrl = import.meta.env.VITE_API_URL || "";
           await fetch(`${baseUrl}/api/email/cancel`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              customerEmail: profileData.email,
-              customerName: profileData.name || "",
+              customerEmail: email,
+              customerName: name,
               orderId: cancelledOrder.id,
               reason: founderCancelReason.trim(),
               items: cancelledOrder.order_items || [],
               total: cancelledOrder.total_price,
             }),
           });
+        } else {
+          // Fallback: fetch profile if not already loaded
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("email, name")
+            .eq("id", cancelledOrder.user_id)
+            .single();
+          if (profileData?.email) {
+            const baseUrl = import.meta.env.VITE_API_URL || "";
+            await fetch(`${baseUrl}/api/email/cancel`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                customerEmail: profileData.email,
+                customerName: profileData.name || "",
+                orderId: cancelledOrder.id,
+                reason: founderCancelReason.trim(),
+                items: cancelledOrder.order_items || [],
+                total: cancelledOrder.total_price,
+              }),
+            });
+          }
         }
       } catch (e) {
         console.error("Cancel email failed:", e);

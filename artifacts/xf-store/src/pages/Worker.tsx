@@ -81,7 +81,16 @@ export default function Worker() {
         return;
       }
     }
-    setOrders(ordersData);
+    // Auto-delete cancelled orders that moved to old_orders and are older than 1 hour
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const toDelete = ordersData.filter(
+      (o: any) => o.status === "old_orders" && o.cancellation_reason && o.created_at < oneHourAgo
+    );
+    if (toDelete.length > 0) {
+      await supabase.from("order_items").delete().in("order_id", toDelete.map((o: any) => o.id));
+      await supabase.from("orders").delete().in("id", toDelete.map((o: any) => o.id));
+    }
+    setOrders(ordersData.filter((o: any) => !toDelete.find((d: any) => d.id === o.id)));
     setOrdersLoading(false);
   }
 
