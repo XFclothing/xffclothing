@@ -3,15 +3,18 @@ import nodemailer from "nodemailer";
 
 const router = Router();
 
+const GMX_USER = "xfclothing@gmx.de";
+const GMX_PASS = process.env.GMX_PASSWORD || "";
+
 const STAFF_EMAILS = ["xfclothing@gmx.de", "xaviermalucha@gmail.com"];
-const FROM = `XF Clothing <xfclothing@gmx.de>`;
+const FROM = `XF Clothing <${GMX_USER}>`;
 
 function createTransport() {
   return nodemailer.createTransport({
     host: "mail.gmx.net",
     port: 587,
     secure: false,
-    auth: { user: "xfclothing@gmx.de", pass: process.env.GMX_PASSWORD || "" },
+    auth: { user: GMX_USER, pass: GMX_PASS },
   });
 }
 
