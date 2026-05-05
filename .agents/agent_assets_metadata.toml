@@ -54,3 +54,57 @@ id = "ndygn14CwKyXktJ1zfKfg"
 uri = "file://artifacts/xf-store/public/images/product-jogger-baggy-white-folded.png"
 type = "image"
 title = "baggy jogger white half folded"
+
+[[generated]]
+id = "oxvmWxIcYnTrJ06i6Q-Fl"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-black.png"
+type = "image"
+title = "side stripe jogger black no logo"
+
+[[generated]]
+id = "LlTTvUZekaqDs2PLPvw1v"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-black-flat.png"
+type = "image"
+title = "side stripe jogger black flat"
+
+[[generated]]
+id = "x0Ov74GZgEY-qSYChx2gP"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-black-folded.png"
+type = "image"
+title = "side stripe jogger black folded"
+
+[[generated]]
+id = "BzK8P8b1MY94saLSuLZ9Y"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-grey.png"
+type = "image"
+title = "side stripe jogger grey front"
+
+[[generated]]
+id = "aMG7Rute9MveW7kHsPJvO"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-grey-flat.png"
+type = "image"
+title = "side stripe jogger grey flat"
+
+[[generated]]
+id = "-mbBNCdWa5pqCFo3NtEwy"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-grey-folded.png"
+type = "image"
+title = "side stripe jogger grey folded"
+
+[[generated]]
+id = "TGJ9269tFFs3TaREVRr1S"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-white.png"
+type = "image"
+title = "side stripe jogger white front"
+
+[[generated]]
+id = "HH3EtylmBEs5AmEbAgi3k"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-white-flat.png"
+type = "image"
+title = "side stripe jogger white flat"
+
+[[generated]]
+id = "3jBwrXsGk22RnA_MMq-8h"
+uri = "file://artifacts/xf-store/public/images/product-jogger-stripe-white-folded.png"
+type = "image"
+title = "side stripe jogger white folded"

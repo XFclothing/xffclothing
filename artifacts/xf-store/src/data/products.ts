@@ -51,18 +51,21 @@ const baggyJoggerGallery = {
 };
 
 
-const openHemGallery = {
+const sideStripeGallery = {
   black: [
-    "/images/product-jogger-openhemm-black.webp",
-    "/images/product-jogger-openhem-black-flat.webp",
+    "/images/product-jogger-stripe-black.png",
+    "/images/product-jogger-stripe-black-flat.png",
+    "/images/product-jogger-stripe-black-folded.png",
   ],
   grey: [
-    "/images/product-jogger-openhem-grey.webp",
-    "/images/product-jogger-openhem-grey-flat.webp",
+    "/images/product-jogger-stripe-grey.png",
+    "/images/product-jogger-stripe-grey-flat.png",
+    "/images/product-jogger-stripe-grey-folded.png",
   ],
   white: [
-    "/images/product-jogger-openhem-white.webp",
-    "/images/product-jogger-openhem-white-flat.webp",
+    "/images/product-jogger-stripe-white.png",
+    "/images/product-jogger-stripe-white-flat.png",
+    "/images/product-jogger-stripe-white-folded.png",
   ],
 };
 
@@ -84,11 +87,11 @@ function hoodieColors() {
 }
 
 
-function openHemColors() {
+function sideStripeColors() {
   return [
-    { name: "Black", value: "#1a1a1a", image: "/images/product-jogger-openhemm-black.webp", gallery: openHemGallery.black },
-    { name: "Grey",  value: "#888888", image: "/images/product-jogger-openhem-grey.webp",   gallery: openHemGallery.grey  },
-    { name: "White", value: "#f5f5f5", image: "/images/product-jogger-openhem-white.webp",  gallery: openHemGallery.white },
+    { name: "Black", value: "#1a1a1a", image: "/images/product-jogger-stripe-black.png", gallery: sideStripeGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-jogger-stripe-grey.png",  gallery: sideStripeGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-jogger-stripe-white.png", gallery: sideStripeGallery.white },
   ];
 }
 
@@ -179,13 +182,13 @@ export const products = [
 
   // ─── JOGGER ─────────────────────────────────────────────────
   {
-    id: "xf-jogger-openhem",
-    name: "XF JOGGER Open Hem",
+    id: "xf-jogger-sidestripe",
+    name: "XF JOGGER Side Stripe",
     category: "jogger",
     price: 45,
-    description: "Open Hem. No elastic at the bottom — loose and wide. Soft Fleece Interior. Streetwear Style.",
-    image: "/images/product-jogger-openhemm-black.webp",
+    description: "Straight Fit. Clean side stripe running down the full leg — athletic streetwear look. Soft Interior. Unisex.",
+    image: "/images/product-jogger-stripe-black.png",
     sizes: ["S", "M", "L", "XL"],
-    colors: openHemColors(),
+    colors: sideStripeColors(),
   },
 ];
