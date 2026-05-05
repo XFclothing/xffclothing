@@ -19,18 +19,19 @@ const relaxedTeeGallery = {
 
 const hoodieGallery = {
   black: [
-    "/images/product-hoodie-black.webp",
-    "/images/product-hoodie-black-back.webp",
-    "/images/product-hoodie-black-flat.webp",
+    "/images/product-hoodie-black.png",
+    "/images/product-hoodie-black-flat.png",
+    "/images/product-hoodie-black-folded.png",
   ],
   grey: [
-    "/images/product-hoodie-grey.webp",
-    "/images/product-hoodie-grey-flat.webp",
+    "/images/product-hoodie-grey.png",
+    "/images/product-hoodie-grey-flat.png",
+    "/images/product-hoodie-grey-folded.png",
   ],
   white: [
-    "/images/product-hoodie-white.webp",
-    "/images/product-hoodie-white-back.webp",
-    "/images/product-hoodie-white-flat.webp",
+    "/images/product-hoodie-white.png",
+    "/images/product-hoodie-white-flat.png",
+    "/images/product-hoodie-white-folded.png",
   ],
 };
 
@@ -99,9 +100,9 @@ function relaxedTeeColors() {
 
 function hoodieColors() {
   return [
-    { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-black.webp", gallery: hoodieGallery.black },
-    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-grey.webp",  gallery: hoodieGallery.grey  },
-    { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-white.webp", gallery: hoodieGallery.white },
+    { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-black.png", gallery: hoodieGallery.black },
+    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-grey.png",  gallery: hoodieGallery.grey  },
+    { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-white.png", gallery: hoodieGallery.white },
   ];
 }
 
