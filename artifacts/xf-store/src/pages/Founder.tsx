@@ -250,6 +250,7 @@ export default function Founder() {
     }
     setFounderCancelOrderId(null);
     setFounderCancelReason("");
+    setActiveOrder(null);
   }
 
   async function fetchTickets() {
