@@ -1,3 +1,10 @@
+// ─── Zipper Hoodie gallery ───────────────────────────────────
+const zipperGallery = {
+  black: ["/images/product-zipper-black.png", "/images/product-zipper-black-model.png"],
+  grey:  ["/images/product-zipper-grey.png",  "/images/product-zipper-grey-model.png"],
+  white: ["/images/product-zipper-white.png", "/images/product-zipper-white-model.png"],
+};
+
 // ─── HELPER: color galleries ────────────────────────────────
 const essentialTeeGallery = {
   black: ["/images/product-tee-essential-black.png", "/images/product-tee-essential-black-model.png", "/images/product-tee-black-back.png"],
@@ -213,6 +220,22 @@ export const products = [
     image: "/images/product-tee-relaxed-black.png",
     sizes: ["S", "M", "L", "XL"],
     colors: relaxedTeeColors(),
+  },
+
+  // ─── ZIPPER ─────────────────────────────────────────────────
+  {
+    id: "xf-zipper",
+    name: "XF Zipper Hoodie",
+    category: "zipper",
+    price: 40,
+    description: "Relaxed Fit. Full-zip hoodie with metal zipper — clean and functional streetwear. Heavy Cotton. Premium Quality.",
+    image: "/images/product-zipper-black.png",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Black", value: "#1a1a1a", image: "/images/product-zipper-black.png", gallery: zipperGallery.black },
+      { name: "Grey",  value: "#888888", image: "/images/product-zipper-grey.png",  gallery: zipperGallery.grey  },
+      { name: "White", value: "#f5f5f5", image: "/images/product-zipper-white.png", gallery: zipperGallery.white },
+    ],
   },
 
   // ─── HOODIES ────────────────────────────────────────────────

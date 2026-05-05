@@ -20,7 +20,7 @@ export const translations = {
     },
     shop: {
       collection: "XF Collection", drop: "FX DROP",
-      hoodies: "Hoodies", tshirts: "T-Shirts", jogger: "JOGGER",
+      hoodies: "Hoodies", zipper: "Zipper", tshirts: "T-Shirts", jogger: "JOGGER",
       viewProduct: "View Product",
     },
     product: {
@@ -117,7 +117,7 @@ export const translations = {
     },
     shop: {
       collection: "XF Kollektion", drop: "FX DROP",
-      hoodies: "Hoodies", tshirts: "T-Shirts", jogger: "JOGGER",
+      hoodies: "Hoodies", zipper: "Zipper", tshirts: "T-Shirts", jogger: "JOGGER",
       viewProduct: "Produkt ansehen",
     },
     product: {

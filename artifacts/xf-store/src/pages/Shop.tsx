@@ -9,6 +9,7 @@ export default function Shop() {
 
   const categories = [
     { key: "hoodie", label: t.shop.hoodies },
+    { key: "zipper", label: t.shop.zipper },
     { key: "tshirt", label: t.shop.tshirts },
     { key: "jogger", label: t.shop.jogger },
   ];

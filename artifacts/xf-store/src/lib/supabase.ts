@@ -17,7 +17,7 @@ export type Product = {
   id: string;
   name: string;
   price: number;
-  category: "hoodie" | "tshirt" | "jogger";
+  category: "hoodie" | "zipper" | "tshirt" | "jogger";
   description: string;
   image_url: string;
   stock: number;
