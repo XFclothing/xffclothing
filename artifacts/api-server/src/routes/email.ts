@@ -6,20 +6,7 @@ const router = Router();
 const STAFF_EMAILS = ["xfclothing@gmx.de", "xaviermalucha@gmail.com"];
 const FROM = `XF Clothing <xfclothing@gmx.de>`;
 
-// Brevo SMTP relay — 300 emails/day free, works on all hosts (Render, Railway, etc.)
-// Fallback to GMX if Brevo key not set
 function createTransport() {
-  const brevoKey = process.env.BREVO_SMTP_KEY;
-  const brevoLogin = process.env.BREVO_LOGIN || "xfclothing@gmx.de";
-  if (brevoKey) {
-    return nodemailer.createTransport({
-      host: "smtp-relay.brevo.com",
-      port: 587,
-      secure: false,
-      auth: { user: brevoLogin, pass: brevoKey },
-    });
-  }
-  // Fallback: GMX direct SMTP (only works on hosts that allow port 587)
   return nodemailer.createTransport({
     host: "mail.gmx.net",
     port: 587,
