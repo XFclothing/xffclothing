@@ -6,7 +6,10 @@
 -- then run this file. If tables already exist, start here.
 -- ============================================================
 
--- 0. Add tracking columns to orders table (for shipping feature)
+-- 0. Add missing columns to orders table
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS customer_name TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS coupon_code TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS tracking_code TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS logistics_provider TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS cancellation_reason TEXT;
