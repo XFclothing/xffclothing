@@ -18,14 +18,32 @@ export default function ResetPassword() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // Supabase redirects here with a session in the URL hash after clicking the reset link
+  // Supabase redirects here after clicking the reset link
+  // PKCE flow: ?code=xxx query param (Supabase JS v2 default)
+  // Legacy implicit flow: #access_token=...&type=recovery hash
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (code) {
+      // PKCE flow — exchange the code for a session
+      supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (!error) {
+          setScreen("update");
+          // Clean the URL so the code isn't reused on refresh
+          window.history.replaceState({}, "", window.location.pathname);
+        }
+      });
+      return;
+    }
+
+    // Fallback: implicit/legacy hash flow
     const hash = window.location.hash;
     if (hash.includes("type=recovery") || hash.includes("access_token")) {
       setScreen("update");
     }
 
-    // Also listen for auth state — Supabase auto-signs in from the recovery token
+    // Also listen for auth state change (covers both flows)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setScreen("update");

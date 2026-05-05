@@ -148,7 +148,7 @@ export default function Account() {
     setMfaError(null);
     setMfaLoading(true);
     const { data: existing } = await supabase.auth.mfa.listFactors();
-    const unverified = existing?.totp?.filter((f) => f.status === "unverified") || [];
+    const unverified = existing?.totp?.filter((f) => (f.status as string) === "unverified") || [];
     for (const f of unverified) {
       await supabase.auth.mfa.unenroll({ factorId: f.id });
     }

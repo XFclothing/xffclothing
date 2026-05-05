@@ -15,7 +15,8 @@ const STATUS_COLORS: Record<Status, string> = {
 };
 
 export default function Admin() {
-  const { user, isAdmin, loading } = useAuth();
+  const { user, role, loading } = useAuth();
+  const isAdmin = role === "worker" || role === "founder";
   const [, navigate] = useLocation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);

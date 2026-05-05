@@ -27,7 +27,7 @@ export type Order = {
   id: string;
   user_id: string;
   total_price: number;
-  status: "pending" | "processing" | "shipped" | "completed" | "cancelled";
+  status: "pending" | "processing" | "shipped" | "completed" | "cancelled" | "delivered" | "old_orders";
   shipping_address: string;
   created_at: string;
   cancellation_reason?: string | null;
