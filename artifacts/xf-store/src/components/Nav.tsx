@@ -68,7 +68,7 @@ export function Nav() {
             : "bg-transparent py-6"
         }`}
       >
-        <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between">
+        <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between relative">
           <Link href="/" className="flex items-center gap-2 z-50">
             <img
               src={isDark ? xfLogo : xfLogoBlack}
@@ -78,7 +78,7 @@ export function Nav() {
             />
           </Link>
 
-          <div className="hidden md:flex items-center space-x-10">
+          <div className="hidden md:flex items-center space-x-10 absolute left-1/2 -translate-x-1/2">
             {links.map((link) => (
               <Link
                 key={link.href}
