@@ -51,6 +51,12 @@ export default function Founder() {
   const [filterStatus, setFilterStatus] = useState<OrderStatus | "all">("all");
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [activeOldOrder, setActiveOldOrder] = useState<Order | null>(null);
+  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
+  const [founderCancelOrderId, setFounderCancelOrderId] = useState<string | null>(null);
+  const [founderCancelReason, setFounderCancelReason] = useState("");
+  const [founderCancelling, setFounderCancelling] = useState(false);
+  const [founderCancelError, setFounderCancelError] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Shipping modal
   const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
@@ -128,9 +134,55 @@ export default function Founder() {
       .from("orders")
       .select("*, order_items(*)")
       .order("created_at", { ascending: false });
-    if (error) console.error("[Founder] fetchOrders error:", error.message);
-    setOrders((data as Order[]) || []);
+    if (error) { console.error("[Founder] fetchOrders error:", error.message); setOrdersLoading(false); return; }
+    const rawOrders = (data as Order[]) || [];
+    // Fetch profiles for all orders that have a user_id
+    const userIds = [...new Set(rawOrders.map((o) => o.user_id).filter(Boolean))];
+    let profileMap: Record<string, any> = {};
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase.from("profiles").select("*").in("id", userIds);
+      if (profiles) {
+        profiles.forEach((p: any) => { profileMap[p.id] = p; });
+      }
+    }
+    const ordersWithProfiles = rawOrders.map((o) => ({
+      ...o,
+      profiles: o.user_id ? profileMap[o.user_id] ?? null : null,
+    }));
+    setOrders(ordersWithProfiles as Order[]);
     setOrdersLoading(false);
+  }
+
+  function copyToClipboard(text: string, id: string) {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 1500);
+  }
+
+  async function founderCancelOrder() {
+    if (!founderCancelOrderId || !founderCancelReason.trim()) return;
+    setFounderCancelling(true);
+    setFounderCancelError(null);
+    const { error } = await supabase
+      .from("orders")
+      .update({ status: "cancelled", cancellation_reason: founderCancelReason.trim() })
+      .eq("id", founderCancelOrderId);
+    setFounderCancelling(false);
+    if (error) { setFounderCancelError(error.message); return; }
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id === founderCancelOrderId
+          ? { ...o, status: "cancelled" as any, cancellation_reason: founderCancelReason.trim() }
+          : o
+      )
+    );
+    setActiveOrder((prev) =>
+      prev && prev.id === founderCancelOrderId
+        ? { ...prev, status: "cancelled" as any, cancellation_reason: founderCancelReason.trim() }
+        : prev
+    );
+    setFounderCancelOrderId(null);
+    setFounderCancelReason("");
   }
 
   async function fetchTickets() {
@@ -418,9 +470,12 @@ export default function Founder() {
               ) : (
                 <div className="space-y-4">
                   {filteredOrders.map((order) => (
-                    <div key={order.id} className="border border-foreground/8 p-6">
+                    <div key={order.id} className="border border-foreground/8 p-6 hover:border-foreground/20 transition-colors">
                       <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-                        <div className="flex-1 min-w-0">
+                        <button
+                          className="flex-1 min-w-0 text-left"
+                          onClick={() => setActiveOrder(order)}
+                        >
                           <div className="flex items-center gap-4 mb-2 flex-wrap">
                             <span className="text-foreground font-semibold text-sm">${order.total_price.toFixed(2)}</span>
                             <span className="text-foreground/25 text-xs">{new Date(order.created_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</span>
@@ -438,7 +493,7 @@ export default function Founder() {
                               ))}
                             </div>
                           )}
-                        </div>
+                        </button>
                         <div className="flex-shrink-0 flex flex-col gap-2">
                           <span className={`text-[10px] uppercase tracking-[0.35em] px-3 py-1.5 border ${ORDER_STATUS_COLORS[order.status] || "text-foreground/50 border-foreground/20"} text-center`}>
                             {order.status}
@@ -738,6 +793,226 @@ export default function Founder() {
           )}
         </motion.div>
       </div>
+
+      {/* Order Detail Modal (Founder) */}
+      <AnimatePresence>
+        {activeOrder && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setActiveOrder(null)}
+              className="fixed inset-0 bg-black/80 z-50 backdrop-blur-sm" />
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-lg bg-card border border-foreground/10 max-h-[90vh] overflow-y-auto"
+              >
+                <div className="flex items-center justify-between px-8 pt-8 pb-6 border-b border-foreground/8">
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.5em] text-foreground/25 mb-1">Order Details</p>
+                    <p className="text-[10px] text-foreground/20 font-mono">{activeOrder.id.split("-")[0].toUpperCase()}</p>
+                  </div>
+                  <button onClick={() => setActiveOrder(null)} className="text-foreground/30 hover:text-foreground transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="px-8 py-6 space-y-6">
+                  {/* Status + Date */}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Placed on</p>
+                      <p className="text-sm text-foreground/70">{new Date(activeOrder.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+                      <p className="text-xs text-foreground/30 mt-0.5">{new Date(activeOrder.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Status</p>
+                      <span className={`text-xs uppercase tracking-widest font-semibold ${ORDER_STATUS_COLORS[activeOrder.status] || "text-foreground/50"}`}>{activeOrder.status}</span>
+                    </div>
+                  </div>
+
+                  {/* User Info */}
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-3">Customer</p>
+                    <div className="bg-foreground/3 border border-foreground/6 px-4 py-3 space-y-2">
+                      {(activeOrder as any).profiles ? (
+                        <>
+                          <p className="text-sm text-foreground/70">{(activeOrder as any).profiles.name}</p>
+                          <p className="text-xs text-foreground/40">{(activeOrder as any).profiles.email}</p>
+                        </>
+                      ) : (
+                        <p className="text-xs text-foreground/30 italic">No profile linked</p>
+                      )}
+                      <div className="flex items-center gap-2 pt-1 border-t border-foreground/6">
+                        <p className="text-[9px] uppercase tracking-[0.35em] text-foreground/25">User ID</p>
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <span className="text-[10px] text-foreground/30 font-mono truncate">{activeOrder.user_id || "—"}</span>
+                          {activeOrder.user_id && (
+                            <button
+                              onClick={() => copyToClipboard(activeOrder.user_id!, `uid-${activeOrder.id}`)}
+                              className="flex-shrink-0 text-foreground/20 hover:text-foreground/60 transition-colors"
+                            >
+                              {copiedId === `uid-${activeOrder.id}` ? (
+                                <span className="text-[9px] text-green-400/70 uppercase tracking-widest">Copied</span>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order ID */}
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Order ID</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-foreground/30 font-mono">{activeOrder.id}</span>
+                      <button
+                        onClick={() => copyToClipboard(activeOrder.id, `oid-${activeOrder.id}`)}
+                        className="flex-shrink-0 text-foreground/20 hover:text-foreground/60 transition-colors"
+                      >
+                        {copiedId === `oid-${activeOrder.id}` ? (
+                          <span className="text-[9px] text-green-400/70 uppercase tracking-widest">Copied</span>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Shipping Address */}
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-3">Shipping Address</p>
+                    <div className="bg-foreground/3 border border-foreground/6 px-4 py-3">
+                      <p className="text-sm text-foreground/60 leading-relaxed whitespace-pre-line">{activeOrder.shipping_address}</p>
+                    </div>
+                  </div>
+
+                  {/* Items */}
+                  {activeOrder.order_items && activeOrder.order_items.length > 0 && (
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-3">Items ({activeOrder.order_items.length})</p>
+                      <div className="border border-foreground/6 divide-y divide-foreground/5">
+                        {activeOrder.order_items.map((item) => (
+                          <div key={item.id} className="flex items-center justify-between px-4 py-3">
+                            <div>
+                              <p className="text-sm text-foreground/70">{item.name}</p>
+                              <p className="text-xs text-foreground/30 mt-0.5">{item.size} · ×{item.quantity}</p>
+                            </div>
+                            <p className="text-sm text-foreground/50">${(item.price * item.quantity).toFixed(2)}</p>
+                          </div>
+                        ))}
+                        <div className="flex items-center justify-between px-4 py-3 bg-foreground/3">
+                          <p className="text-xs uppercase tracking-[0.35em] text-foreground/40">Total</p>
+                          <p className="text-sm font-semibold text-foreground/80">${activeOrder.total_price.toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Cancellation reason */}
+                  {(activeOrder as any).status === "cancelled" && (activeOrder as any).cancellation_reason && (
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-3">Cancellation Reason</p>
+                      <p className="text-xs text-red-400/50 italic leading-relaxed">{(activeOrder as any).cancellation_reason}</p>
+                    </div>
+                  )}
+
+                  {/* Tracking */}
+                  {activeOrder.status === "shipped" && activeOrder.tracking_code && (
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-foreground/25 mb-2">Tracking</p>
+                      <p className="text-xs text-foreground/40 uppercase tracking-widest">{activeOrder.logistics_provider}</p>
+                      <p className="text-xs text-foreground/50 font-mono mt-1">{activeOrder.tracking_code}</p>
+                    </div>
+                  )}
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap gap-3 pt-2 border-t border-foreground/8">
+                    {(activeOrder.status === "pending" || activeOrder.status === "processing") && (
+                      <button
+                        onClick={() => {
+                          setFounderCancelOrderId(activeOrder.id);
+                          setFounderCancelReason("");
+                          setFounderCancelError(null);
+                        }}
+                        className="text-[9px] uppercase tracking-[0.3em] text-red-400/50 hover:text-red-400 border border-red-400/15 hover:border-red-400/40 px-3 py-2 transition-colors"
+                      >
+                        Cancel Order
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setActiveOrder(null)}
+                      className="ml-auto text-[9px] uppercase tracking-[0.3em] text-foreground/25 hover:text-foreground/60 px-3 py-2 transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Founder Cancel Order Modal */}
+      <AnimatePresence>
+        {founderCancelOrderId && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => { setFounderCancelOrderId(null); setFounderCancelReason(""); setFounderCancelError(null); }}
+              className="fixed inset-0 bg-black/80 z-[60] backdrop-blur-sm" />
+            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-md bg-card border border-foreground/10"
+              >
+                <div className="p-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-sm font-semibold text-foreground uppercase tracking-widest">Cancel Order</h3>
+                    <button onClick={() => { setFounderCancelOrderId(null); setFounderCancelReason(""); setFounderCancelError(null); }} className="text-foreground/30 hover:text-foreground">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <p className="text-xs text-foreground/40 mb-5 leading-relaxed">Enter a reason for the cancellation. The order will be marked as cancelled.</p>
+                  <textarea
+                    value={founderCancelReason}
+                    onChange={(e) => setFounderCancelReason(e.target.value)}
+                    placeholder="Reason for cancellation..."
+                    rows={4}
+                    autoFocus
+                    className="w-full bg-foreground/5 border border-foreground/10 text-foreground placeholder-foreground/20 px-4 py-3 text-sm outline-none focus:border-foreground/30 transition-colors resize-none mb-4"
+                  />
+                  {founderCancelError && <p className="text-red-400/80 text-xs mb-3">{founderCancelError}</p>}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => { setFounderCancelOrderId(null); setFounderCancelReason(""); setFounderCancelError(null); }}
+                      className="flex-1 border border-foreground/15 text-foreground/40 hover:text-foreground hover:border-foreground/40 py-3 text-xs uppercase tracking-[0.4em] transition-colors"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={founderCancelOrder}
+                      disabled={founderCancelling || !founderCancelReason.trim()}
+                      className="flex-1 bg-red-500/80 text-foreground py-3 text-xs uppercase tracking-[0.4em] font-semibold hover:bg-red-500 transition-colors disabled:opacity-40"
+                    >
+                      {founderCancelling ? "Cancelling..." : "Cancel Order"}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Old Order Detail Modal */}
       <AnimatePresence>
