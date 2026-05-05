@@ -245,19 +245,19 @@ title = "oversize hoodie blank white"
 id = "2RFepaoeiR2OZRPRq-8yr"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-black.png"
 type = "image"
-title = "xf hoodie design black proper"
+title = "xf hoodie black blue piping"
 
 [[generated]]
 id = "SjCaVU1hdg3mJx7Et5Oo7"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-grey.png"
 type = "image"
-title = "xf hoodie design grey proper"
+title = "xf hoodie grey blue piping"
 
 [[generated]]
 id = "wCbXy3_c06RdcnsrPIpf4"
 uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-white.png"
 type = "image"
-title = "xf hoodie design white proper"
+title = "xf hoodie white blue piping"
 
 [[generated]]
 id = "Y1GYe9sz_7RVZtZYA_TgG"
@@ -354,3 +354,39 @@ id = "yGlHvger31Lp728O7GqVT"
 uri = "file://artifacts/xf-store/public/images/product-tee-relaxed-white-model.png"
 type = "image"
 title = "relaxed tee white model stitching no face"
+
+[[generated]]
+id = "7tjET1O3l6HX3ECJLxoco"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-design-black.png"
+type = "image"
+title = "oversized design hoodie black blue piping"
+
+[[generated]]
+id = "AuO4w0Tmk6MgFTQgw0tqe"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-design-grey.png"
+type = "image"
+title = "oversized design hoodie grey blue piping"
+
+[[generated]]
+id = "X1a1Wbsf9YPpifroVtPki"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-design-white.png"
+type = "image"
+title = "oversized design hoodie white blue piping"
+
+[[generated]]
+id = "44CZICH51vQzV9DAbgWTe"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-oversize-black-model.png"
+type = "image"
+title = "oversize hoodie plain black model"
+
+[[generated]]
+id = "iuZoYB321H6OFFZfm3_aj"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-design-black-model.png"
+type = "image"
+title = "design hoodie black model blue piping"
+
+[[generated]]
+id = "LQ9ADkgTC6-5lqKSBZYJV"
+uri = "file://artifacts/xf-store/public/images/product-hoodie-xf-black-model.png"
+type = "image"
+title = "xf hoodie black model blue piping"
