@@ -36,14 +36,17 @@ const baggyJoggerGallery = {
   black: [
     "/images/product-jogger-baggy-black.png",
     "/images/product-jogger-baggy-black-flat.png",
+    "/images/product-jogger-baggy-black-folded.png",
   ],
   grey: [
     "/images/product-jogger-baggy-grey.png",
     "/images/product-jogger-baggy-grey-flat.png",
+    "/images/product-jogger-baggy-grey-folded.png",
   ],
   white: [
     "/images/product-jogger-baggy-white.png",
     "/images/product-jogger-baggy-white-flat.png",
+    "/images/product-jogger-baggy-white-folded.png",
   ],
 };
 
