@@ -6,6 +6,16 @@
 -- then run this file. If tables already exist, start here.
 -- ============================================================
 
+-- 0. Add tracking columns to orders table (for shipping feature)
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS tracking_code TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS logistics_provider TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS cancellation_reason TEXT;
+
+-- Update status constraint to allow all statuses used in the app
+ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_status_check;
+ALTER TABLE orders ADD CONSTRAINT orders_status_check
+  CHECK (status IN ('pending', 'processing', 'shipped', 'completed', 'cancelled', 'delivered', 'old_orders'));
+
 -- 1. Add permissions column to admins table
 ALTER TABLE admins ADD COLUMN IF NOT EXISTS permissions JSONB DEFAULT '{"view_orders": true, "manage_orders": false, "manage_tickets": false}'::jsonb;
 ALTER TABLE admins ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();

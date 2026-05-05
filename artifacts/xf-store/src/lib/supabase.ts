@@ -31,6 +31,8 @@ export type Order = {
   shipping_address: string;
   created_at: string;
   cancellation_reason?: string | null;
+  tracking_code?: string | null;
+  logistics_provider?: string | null;
   order_items?: OrderItem[];
   profiles?: Profile;
 };

@@ -45,6 +45,7 @@ GMX_PASSWORD = "XFclothing12!"
 BREVO_LOGIN = "xfclothing@gmx.de"
 BREVO_SMTP_KEY = "xsmtpsib-e771d672b95af60a044c1a2c1390e31e07ecb3b11f005ac2ba552ebe3a9b9ab9-NzW0bVW7sZqsJ8Lp"
 DATABASE_URL = "postgresql://postgres:gmxtBL16gyLQMPST@db.rkcnbiqyhqnmwysqydxc.supabase.co:5432/postgres"
+SUPABASE_DATABASE_URL = "postgresql://postgres:gmxtBL16gyLQMPST@db.rkcnbiqyhqnmwysqydxc.supabase.co:5432/postgres"
 
 [nix]
 channel = "stable-25_05"

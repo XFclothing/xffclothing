@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { X, Plus, Trash2 } from "lucide-react";
+import { X, Plus, Trash2, Package } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase, Order, Ticket, TicketMessage, Admin } from "@/lib/supabase";
 
 const STATUSES = ["pending", "processing", "shipped", "completed"] as const;
 type OrderStatus = (typeof STATUSES)[number];
+
+const CARRIERS = ["DHL", "UPS", "FedEx", "DPD", "GLS", "Hermes", "Andere"] as const;
 
 const ORDER_STATUS_COLORS: Record<string, string> = {
   pending: "text-yellow-400/80 border-yellow-400/30",
@@ -46,6 +48,13 @@ export default function Founder() {
   const [filterStatus, setFilterStatus] = useState<OrderStatus | "all">("all");
   const [updatingOrder, setUpdatingOrder] = useState<string | null>(null);
   const [activeOldOrder, setActiveOldOrder] = useState<Order | null>(null);
+
+  // Shipping modal
+  const [shippingOrder, setShippingOrder] = useState<Order | null>(null);
+  const [trackingCode, setTrackingCode] = useState("");
+  const [logisticsProvider, setLogisticsProvider] = useState<string>(CARRIERS[0]);
+  const [shippingLoading, setShippingLoading] = useState(false);
+  const [shippingError, setShippingError] = useState<string | null>(null);
 
   // Tickets
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -169,11 +178,67 @@ export default function Founder() {
     setWorkers((prev) => prev.map((w) => w.id === id ? { ...w, permissions: newPerms } : w));
   }
 
-  async function updateOrderStatus(orderId: string, status: OrderStatus) {
+  function handleStatusChange(order: Order, status: OrderStatus) {
+    if (status === "shipped") {
+      setShippingOrder(order);
+      setTrackingCode("");
+      setLogisticsProvider(CARRIERS[0]);
+      setShippingError(null);
+    } else {
+      doUpdateOrderStatus(order.id, status);
+    }
+  }
+
+  async function doUpdateOrderStatus(orderId: string, status: OrderStatus, extra?: { tracking_code: string; logistics_provider: string }) {
     setUpdatingOrder(orderId);
-    await supabase.from("orders").update({ status }).eq("id", orderId);
-    setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, status } : o));
+    await supabase.from("orders").update({ status, ...extra }).eq("id", orderId);
+    setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, status, ...(extra || {}) } : o));
     setUpdatingOrder(null);
+  }
+
+  async function confirmShipping() {
+    if (!shippingOrder || !trackingCode.trim()) {
+      setShippingError("Bitte Tracking-Code eingeben.");
+      return;
+    }
+    setShippingLoading(true);
+    setShippingError(null);
+
+    const { data: profileData } = await supabase
+      .from("profiles")
+      .select("email, name")
+      .eq("id", shippingOrder.user_id)
+      .single();
+
+    await doUpdateOrderStatus(shippingOrder.id, "shipped", {
+      tracking_code: trackingCode.trim(),
+      logistics_provider: logisticsProvider,
+    });
+
+    if (profileData?.email) {
+      try {
+        const baseUrl = import.meta.env.VITE_API_URL || "";
+        await fetch(`${baseUrl}/api/email/shipping`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerEmail: profileData.email,
+            customerName: profileData.name || "",
+            orderId: shippingOrder.id,
+            trackingCode: trackingCode.trim(),
+            logisticsProvider,
+            items: shippingOrder.order_items || [],
+            total: shippingOrder.total_price,
+            shippingAddress: shippingOrder.shipping_address,
+          }),
+        });
+      } catch (e) {
+        console.error("Shipping email failed:", e);
+      }
+    }
+
+    setShippingLoading(false);
+    setShippingOrder(null);
   }
 
   async function openTicket(ticket: Ticket) {
@@ -371,12 +436,18 @@ export default function Founder() {
                           )}
                         </div>
                         <div className="flex-shrink-0 flex flex-col gap-2">
-                          <span className={`text-[10px] uppercase tracking-[0.35em] px-3 py-1.5 border ${ORDER_STATUS_COLORS[order.status as OrderStatus] || "text-foreground/50 border-foreground/20"} text-center`}>
+                          <span className={`text-[10px] uppercase tracking-[0.35em] px-3 py-1.5 border ${ORDER_STATUS_COLORS[order.status] || "text-foreground/50 border-foreground/20"} text-center`}>
                             {order.status}
                           </span>
+                          {order.status === "shipped" && order.tracking_code && (
+                            <div className="text-[9px] text-foreground/30 text-right">
+                              <span className="uppercase tracking-widest">{order.logistics_provider}</span><br />
+                              <span className="font-mono">{order.tracking_code}</span>
+                            </div>
+                          )}
                           <select
                             value={order.status}
-                            onChange={(e) => updateOrderStatus(order.id, e.target.value as OrderStatus)}
+                            onChange={(e) => handleStatusChange(order, e.target.value as OrderStatus)}
                             disabled={updatingOrder === order.id}
                             className="bg-foreground/5 border border-foreground/10 text-foreground/60 text-xs px-3 py-2 outline-none cursor-pointer hover:border-foreground/25 transition-colors disabled:opacity-50"
                           >
@@ -629,6 +700,81 @@ export default function Founder() {
                   )}
                   <div className="pt-2 border-t border-foreground/8 flex justify-end">
                     <button onClick={() => setActiveOldOrder(null)} className="text-[9px] uppercase tracking-[0.3em] text-foreground/25 hover:text-foreground/60 px-3 py-2 transition-colors">Close</button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Shipping Modal */}
+      <AnimatePresence>
+        {shippingOrder && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => !shippingLoading && setShippingOrder(null)}
+              className="fixed inset-0 bg-black/85 z-50 backdrop-blur-sm" />
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-md bg-card border border-foreground/10"
+              >
+                <div className="flex items-center justify-between px-8 pt-8 pb-6 border-b border-foreground/8">
+                  <div className="flex items-center gap-3">
+                    <Package className="w-4 h-4 text-purple-400/70" />
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.5em] text-foreground/25 mb-0.5">Shipping</p>
+                      <p className="text-sm font-semibold text-foreground uppercase tracking-widest">Mark as Shipped</p>
+                    </div>
+                  </div>
+                  <button onClick={() => !shippingLoading && setShippingOrder(null)} className="text-foreground/30 hover:text-foreground transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="px-8 py-6 space-y-5">
+                  <p className="text-xs text-foreground/40 leading-relaxed">
+                    Gib den Tracking-Code und den Versanddienstleister ein. Der Kunde erhält automatisch eine E-Mail mit dem Tracking-Link.
+                  </p>
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-[0.4em] text-foreground/40 mb-2">Versanddienstleister</label>
+                    <select
+                      value={logisticsProvider}
+                      onChange={(e) => setLogisticsProvider(e.target.value)}
+                      className="w-full bg-foreground/5 border border-foreground/10 text-foreground text-sm px-4 py-3 outline-none focus:border-foreground/30 transition-colors cursor-pointer"
+                    >
+                      {CARRIERS.map((c) => (
+                        <option key={c} value={c} className="bg-background">{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-[0.4em] text-foreground/40 mb-2">Tracking-Code</label>
+                    <input
+                      type="text"
+                      value={trackingCode}
+                      onChange={(e) => setTrackingCode(e.target.value)}
+                      placeholder="z.B. 1Z999AA10123456784"
+                      className="w-full bg-foreground/5 border border-foreground/10 text-foreground placeholder-foreground/20 px-4 py-3 text-sm outline-none focus:border-foreground/30 transition-colors font-mono"
+                      autoFocus
+                    />
+                  </div>
+                  {shippingError && <p className="text-red-400/80 text-xs tracking-wide">{shippingError}</p>}
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      onClick={() => !shippingLoading && setShippingOrder(null)}
+                      className="flex-1 border border-foreground/10 text-foreground/40 hover:text-foreground/70 py-3 text-xs uppercase tracking-[0.35em] transition-colors"
+                    >
+                      Abbrechen
+                    </button>
+                    <button
+                      onClick={confirmShipping}
+                      disabled={shippingLoading || !trackingCode.trim()}
+                      className="flex-1 bg-purple-500/80 hover:bg-purple-500 text-white py-3 text-xs uppercase tracking-[0.35em] font-semibold transition-colors disabled:opacity-40"
+                    >
+                      {shippingLoading ? "Wird gesendet..." : "Shipped + Email senden"}
+                    </button>
                   </div>
                 </div>
               </motion.div>

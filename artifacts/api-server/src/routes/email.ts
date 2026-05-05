@@ -206,6 +206,101 @@ router.post("/email/order", async (req, res) => {
   }
 });
 
+router.post("/email/shipping", async (req, res) => {
+  const { customerEmail, customerName, orderId, trackingCode, logisticsProvider, items, total, shippingAddress } = req.body;
+
+  if (!customerEmail || !trackingCode || !logisticsProvider) {
+    res.status(400).json({ ok: false, error: "Missing required fields" });
+    return;
+  }
+
+  const CARRIER_LINKS: Record<string, string> = {
+    DHL: `https://www.dhl.com/de-de/home/tracking.html?tracking-id=${trackingCode}`,
+    UPS: `https://www.ups.com/track?tracknum=${trackingCode}`,
+    FedEx: `https://www.fedex.com/fedextrack/?trknbr=${trackingCode}`,
+    DPD: `https://www.dpd.com/de/de/empfangen/sendung-verfolgen/?parcelNumber=${trackingCode}`,
+    GLS: `https://gls-group.com/track/${trackingCode}`,
+    Hermes: `https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation/?sendungsnummer=${trackingCode}`,
+  };
+
+  const trackingUrl = CARRIER_LINKS[logisticsProvider] || `https://www.google.com/search?q=${logisticsProvider}+tracking+${trackingCode}`;
+
+  const itemsHtml = (items || [])
+    .map((i: any) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.75);font-size:13px;">${i.name}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:12px;text-align:center;">${i.size}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);font-size:12px;text-align:center;">×${i.quantity}</td>
+        <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:#fff;font-size:13px;text-align:right;">€${(i.price * i.quantity).toFixed(2)}</td>
+      </tr>`)
+    .join("");
+
+  const html = `
+<div style="background:#000;color:#fff;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;">
+  <div style="max-width:520px;margin:0 auto;padding:56px 40px;">
+    <p style="font-size:10px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 48px;">XF — Shipping Update</p>
+
+    <h1 style="font-size:28px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#fff;margin:0 0 8px;">Your Order<br>Is On Its Way.</h1>
+    <p style="font-size:13px;color:rgba(255,255,255,0.45);margin:0 0 40px;line-height:1.7;">
+      ${customerName ? "Hey " + customerName + ", your" : "Your"} order has been shipped and is on its way to you.
+    </p>
+
+    <div style="border:1px solid rgba(255,255,255,0.15);padding:28px;margin-bottom:24px;background:rgba(255,255,255,0.03);">
+      <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 16px;">Tracking Info</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div>
+          <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:0 0 4px;">Carrier</p>
+          <p style="font-size:16px;font-weight:700;color:#fff;margin:0;">${logisticsProvider}</p>
+        </div>
+        <div style="text-align:right;">
+          <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:0 0 4px;">Tracking Number</p>
+          <p style="font-size:14px;font-weight:600;color:#fff;margin:0;font-family:monospace;">${trackingCode}</p>
+        </div>
+      </div>
+      <a href="${trackingUrl}" style="display:block;background:#fff;color:#000;font-size:11px;font-weight:700;letter-spacing:5px;text-transform:uppercase;text-decoration:none;padding:16px;text-align:center;">
+        TRACK YOUR PACKAGE →
+      </a>
+    </div>
+
+    ${items && items.length > 0 ? `
+    <div style="border:1px solid rgba(255,255,255,0.08);padding:24px;margin-bottom:24px;">
+      <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 16px;">Items Shipped</p>
+      <table style="width:100%;border-collapse:collapse;">
+        <tbody>${itemsHtml}</tbody>
+      </table>
+      <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+        <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Total</span>
+        <span style="font-size:16px;font-weight:700;color:#fff;">€${Number(total).toFixed(2)}</span>
+      </div>
+    </div>` : ""}
+
+    ${shippingAddress ? `
+    <div style="border:1px solid rgba(255,255,255,0.08);padding:24px;margin-bottom:40px;">
+      <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:0 0 8px;">Shipping To</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:0;line-height:1.6;">${shippingAddress}</p>
+    </div>` : ""}
+
+    <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0 0 4px;">Order Reference</p>
+    <p style="font-size:11px;color:rgba(255,255,255,0.25);margin:0 0 48px;font-family:monospace;">#${String(orderId).slice(0, 8).toUpperCase()}</p>
+
+    <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.15);margin:0;">XF by Xavier &amp; Fynn</p>
+  </div>
+</div>`;
+
+  try {
+    await createTransport().sendMail({
+      from: FROM,
+      to: customerEmail,
+      subject: "Your Order Has Shipped — XF Clothing",
+      html,
+    });
+    res.json({ ok: true });
+  } catch (err: any) {
+    console.error("Shipping email error:", err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 router.post("/email/ticket", async (req, res) => {
   const { customerEmail, customerName, subject, message, workerEmails } = req.body;
 
