@@ -50,6 +50,8 @@ const oversizedHoodieGallery = {
     "/images/product-hoodie-design-black-model.png",
   ],
   grey: [
+    "/images/product-hoodie-design-grey-flat.jpg",
+    "/images/product-hoodie-design-grey-model.jpg",
     "/images/product-hoodie-design-grey.png",
   ],
   white: [
@@ -147,7 +149,7 @@ function oversizeHoodieColors() {
 function oversizedHoodieColors() {
   return [
     { name: "Black", value: "#1a1a1a", image: "/images/product-hoodie-design-black.png", gallery: oversizedHoodieGallery.black },
-    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-design-grey.png",  gallery: oversizedHoodieGallery.grey  },
+    { name: "Grey",  value: "#888888", image: "/images/product-hoodie-design-grey-flat.jpg",  gallery: oversizedHoodieGallery.grey  },
     { name: "White", value: "#f5f5f5", image: "/images/product-hoodie-design-white.png", gallery: oversizedHoodieGallery.white },
   ];
 }
