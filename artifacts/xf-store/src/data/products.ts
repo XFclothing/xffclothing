@@ -51,7 +51,6 @@ const oversizedHoodieGallery = {
   ],
   grey: [
     "/images/product-hoodie-design-grey.png",
-    "/images/product-hoodie-design-grey-model.png",
   ],
   white: [
     "/images/product-hoodie-design-white.png",
