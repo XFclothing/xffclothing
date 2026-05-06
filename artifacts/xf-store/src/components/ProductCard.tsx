@@ -66,13 +66,13 @@ export function ProductCard({ product, index }: ProductCardProps) {
         />
 
         {/* Model hover image — fades in on hover */}
-        {hoverImage && !unavailable && (
+        {hoverImage && (
           <img
             src={hoverImage}
             alt={`${product.name} worn`}
             loading="lazy"
             className={`object-contain w-full h-full absolute inset-0 transition-opacity duration-500 ease-out group-hover:scale-105 ${
-              cardHovered ? "opacity-100" : "opacity-0"
+              cardHovered ? (unavailable ? "opacity-50" : "opacity-100") : "opacity-0"
             }`}
           />
         )}
