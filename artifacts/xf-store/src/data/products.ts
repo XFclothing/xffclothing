@@ -1,7 +1,7 @@
 // ─── Zipper Hoodie gallery ───────────────────────────────────
 const zipperGallery = {
   black: ["/images/product-zipper-black.png", "/images/product-zipper-black-model.png"],
-  grey:  ["/images/product-zipper-grey.jpg", "/images/product-zipper-grey.png",  "/images/product-zipper-grey-model.png"],
+  grey:  ["/images/product-zipper-grey.jpg", "/images/product-zipper-grey-model.png"],
   white: ["/images/product-zipper-white.png", "/images/product-zipper-white-model.png"],
 };
 
