@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { X, Plus, Trash2, Package } from "lucide-react";
+import { X, Plus, Trash2, Package, ChevronDown } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase, Order, Ticket, TicketMessage, Admin } from "@/lib/supabase";
 import { useStoreSettings } from "@/context/StoreSettingsContext";
@@ -31,7 +31,8 @@ const DEFAULT_PERMS = { view_orders: true, manage_orders: false, manage_tickets:
 export default function Founder() {
   const { role, loading } = useAuth();
   const [, navigate] = useLocation();
-  const { comingSoon, setComingSoon, outOfStock, toggleOutOfStock, loaded: settingsLoaded } = useStoreSettings();
+  const { comingSoon, setComingSoon, outOfStock, toggleOutOfStock, toggleOutOfStockColor, isColorOutOfStock, loaded: settingsLoaded } = useStoreSettings();
+  const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const [tab, setTab] = useState<"workers" | "orders" | "delivered" | "old_orders" | "tickets" | "notify" | "shop">("workers");
 
   // Workers
@@ -802,51 +803,118 @@ export default function Founder() {
                 <p className="text-[10px] uppercase tracking-[0.5em] text-foreground/30 mb-5">
                   Individual Products — Out of Stock
                 </p>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {products.map((product) => {
                     const isOos = outOfStock.includes(product.id);
+                    const colors = (product as any).colors as { name: string; value: string }[] | undefined;
+                    const isExpanded = expandedProduct === product.id;
+                    const colorOosList = colors ? colors.filter((c) => isColorOutOfStock(product.id, c.name)) : [];
+                    const hasColorOos = colorOosList.length > 0;
+
                     return (
                       <div
                         key={product.id}
-                        className={`flex items-center justify-between gap-4 px-5 py-4 border transition-colors ${
-                          isOos ? "border-foreground/20 bg-foreground/3" : "border-foreground/6"
+                        className={`border transition-colors ${
+                          isOos ? "border-foreground/20 bg-foreground/3" : hasColorOos ? "border-foreground/12 bg-foreground/2" : "border-foreground/6"
                         }`}
                       >
-                        <div className="flex items-center gap-4 min-w-0">
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            className={`w-10 h-12 object-cover flex-shrink-0 ${isOos ? "opacity-40" : ""}`}
-                          />
-                          <div className="min-w-0">
-                            <p className={`text-sm font-medium truncate ${isOos ? "text-foreground/40" : "text-foreground"}`}>
-                              {product.name}
-                            </p>
-                            <p className="text-[10px] uppercase tracking-widest text-foreground/25 mt-0.5">
-                              €{product.price}
-                            </p>
+                        {/* Main row */}
+                        <div className="flex items-center justify-between gap-4 px-5 py-4">
+                          <button
+                            className="flex items-center gap-4 min-w-0 flex-1 text-left"
+                            onClick={() => setExpandedProduct(isExpanded ? null : product.id)}
+                            disabled={!colors || colors.length === 0}
+                          >
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              className={`w-10 h-12 object-contain flex-shrink-0 bg-white ${isOos ? "opacity-40" : ""}`}
+                            />
+                            <div className="min-w-0">
+                              <p className={`text-sm font-medium truncate ${isOos ? "text-foreground/40" : "text-foreground"}`}>
+                                {product.name}
+                              </p>
+                              <p className="text-[10px] uppercase tracking-widest text-foreground/25 mt-0.5">
+                                €{product.price}
+                                {hasColorOos && !isOos && (
+                                  <span className="ml-2 text-yellow-400/60">· {colorOosList.length} color{colorOosList.length > 1 ? "s" : ""} OOS</span>
+                                )}
+                              </p>
+                            </div>
+                            {colors && colors.length > 0 && (
+                              <ChevronDown className={`w-3.5 h-3.5 text-foreground/25 flex-shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                            )}
+                          </button>
+
+                          <div className="flex items-center gap-3 flex-shrink-0">
+                            <span className="text-[10px] uppercase tracking-[0.35em] text-foreground/30 hidden sm:block">
+                              {isOos ? "All OOS" : "All OOS"}
+                            </span>
+                            <button
+                              onClick={() => settingsLoaded && toggleOutOfStock(product.id)}
+                              disabled={!settingsLoaded || comingSoon}
+                              className={`relative w-10 h-5 rounded-full transition-colors duration-300 disabled:opacity-30 ${
+                                isOos ? "bg-foreground/50" : "bg-foreground/12"
+                              }`}
+                            >
+                              <span
+                                className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300 ${
+                                  isOos ? "translate-x-5" : "translate-x-0"
+                                }`}
+                              />
+                            </button>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                          {isOos && (
-                            <span className="text-[10px] uppercase tracking-[0.35em] text-foreground/30">
-                              Out of Stock
-                            </span>
-                          )}
-                          <button
-                            onClick={() => settingsLoaded && toggleOutOfStock(product.id)}
-                            disabled={!settingsLoaded || comingSoon}
-                            className={`relative w-10 h-5 rounded-full transition-colors duration-300 disabled:opacity-30 ${
-                              isOos ? "bg-foreground/50" : "bg-foreground/12"
-                            }`}
-                          >
-                            <span
-                              className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300 ${
-                                isOos ? "translate-x-5" : "translate-x-0"
-                              }`}
-                            />
-                          </button>
-                        </div>
+
+                        {/* Color rows (expanded) */}
+                        {isExpanded && colors && colors.length > 0 && (
+                          <div className="border-t border-foreground/6 px-5 pb-4 pt-3 space-y-2">
+                            <p className="text-[9px] uppercase tracking-[0.45em] text-foreground/25 mb-3">Colors</p>
+                            {colors.map((color) => {
+                              const colorOos = isColorOutOfStock(product.id, color.name);
+                              const productOos = outOfStock.includes(product.id);
+                              return (
+                                <div key={color.name} className="flex items-center justify-between gap-3">
+                                  <div className="flex items-center gap-3">
+                                    <span
+                                      className={`w-5 h-5 rounded-full border flex-shrink-0 ${colorOos || productOos ? "opacity-40" : ""}`}
+                                      style={{
+                                        backgroundColor: color.value,
+                                        borderColor: color.name === "White" ? "#ccc" : "transparent",
+                                        outline: "1px solid rgba(255,255,255,0.1)",
+                                      }}
+                                    />
+                                    <span className={`text-xs tracking-widest uppercase ${colorOos || productOos ? "text-foreground/30" : "text-foreground/70"}`}>
+                                      {color.name}
+                                    </span>
+                                    {colorOos && !productOos && (
+                                      <span className="text-[9px] uppercase tracking-[0.3em] text-foreground/25">Out of Stock</span>
+                                    )}
+                                  </div>
+                                  <button
+                                    onClick={() => settingsLoaded && !productOos && toggleOutOfStockColor(product.id, color.name)}
+                                    disabled={!settingsLoaded || comingSoon || productOos}
+                                    title={productOos ? "Whole product is OOS" : undefined}
+                                    className={`relative w-8 h-4 rounded-full transition-colors duration-300 disabled:opacity-25 ${
+                                      colorOos ? "bg-foreground/40" : "bg-foreground/10"
+                                    }`}
+                                  >
+                                    <span
+                                      className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform duration-300 ${
+                                        colorOos ? "translate-x-4" : "translate-x-0"
+                                      }`}
+                                    />
+                                  </button>
+                                </div>
+                              );
+                            })}
+                            {isOos && (
+                              <p className="text-[9px] text-foreground/20 uppercase tracking-widest pt-1">
+                                Disable "All OOS" to control individual colors.
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

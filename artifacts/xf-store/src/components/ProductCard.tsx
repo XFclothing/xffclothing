@@ -26,7 +26,7 @@ export function ProductCard({ product, index }: ProductCardProps) {
   const [, navigate] = useLocation();
   const [hoveredColor, setHoveredColor] = useState<number | null>(null);
   const [cardHovered, setCardHovered] = useState(false);
-  const { comingSoon, outOfStock, loaded } = useStoreSettings();
+  const { comingSoon, outOfStock, loaded, isColorOutOfStock } = useStoreSettings();
 
   const colors = product.colors;
   const activeColor = colors
@@ -97,17 +97,26 @@ export function ProductCard({ product, index }: ProductCardProps) {
 
         {colors && colors.length > 0 && (
           <div className="flex gap-2 items-center">
-            {colors.map((color, idx) => (
-              <button
-                key={color.name}
-                title={color.name}
-                onMouseEnter={() => setHoveredColor(idx)}
-                onMouseLeave={() => setHoveredColor(null)}
-                onClick={() => navigate(`/shop/${product.id}`)}
-                className="w-4 h-4 rounded-full border border-border hover:scale-125 transition-transform duration-200"
-                style={{ backgroundColor: color.value }}
-              />
-            ))}
+            {colors.map((color, idx) => {
+              const colorOos = !unavailable && isColorOutOfStock(product.id, color.name);
+              return (
+                <button
+                  key={color.name}
+                  title={colorOos ? `${color.name} — Out of Stock` : color.name}
+                  onMouseEnter={() => setHoveredColor(idx)}
+                  onMouseLeave={() => setHoveredColor(null)}
+                  onClick={() => navigate(`/shop/${product.id}`)}
+                  className={`relative w-4 h-4 rounded-full border border-border hover:scale-125 transition-transform duration-200 ${colorOos ? "opacity-30" : ""}`}
+                  style={{ backgroundColor: color.value }}
+                >
+                  {colorOos && (
+                    <span className="absolute inset-0 flex items-center justify-center rounded-full overflow-hidden pointer-events-none">
+                      <span className="block w-[140%] h-px bg-foreground/60 rotate-45 absolute" />
+                    </span>
+                  )}
+                </button>
+              );
+            })}
             <span className="text-xs text-muted-foreground tracking-wide ml-1">
               {colors.length} colors
             </span>

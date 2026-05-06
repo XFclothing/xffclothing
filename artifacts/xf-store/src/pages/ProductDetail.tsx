@@ -58,7 +58,7 @@ export default function ProductDetail() {
   const [, navigate] = useLocation();
   const { addToCart } = useCart();
   const { t, lang } = useLang();
-  const { comingSoon, outOfStock, loaded } = useStoreSettings();
+  const { comingSoon, outOfStock, loaded, isColorOutOfStock } = useStoreSettings();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -108,7 +108,8 @@ export default function ProductDetail() {
 
   const isComingSoon = loaded && comingSoon;
   const isOutOfStock = loaded && !comingSoon && outOfStock.includes(product.id);
-  const unavailable = isComingSoon || isOutOfStock;
+  const isColorOos = loaded && !comingSoon && !isOutOfStock && !!activeColor && outOfStock.includes(`${product.id}:${activeColor.name}`);
+  const unavailable = isComingSoon || isOutOfStock || isColorOos;
 
   function handleAddToCart() {
     if (product!.sizes.length > 0 && !selectedSize) {
@@ -255,28 +256,36 @@ export default function ProductDetail() {
                   <div>
                     <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">Color</h3>
                     <div className="flex gap-3">
-                      {colors.map((color, idx) => (
-                        <button
-                          key={color.name}
-                          onClick={() => setSelectedColorIndex(idx)}
-                          title={color.name}
-                          className={`relative w-10 h-10 rounded-full border-2 transition-all duration-200 ${
-                            selectedColorIndex === idx
-                              ? "border-foreground scale-110"
-                              : "border-transparent hover:border-foreground/40"
-                          }`}
-                          style={{
-                            backgroundColor: color.value,
-                            boxShadow: color.name === "White" ? "inset 0 0 0 1px #ccc" : undefined,
-                          }}
-                        >
-                          {selectedColorIndex === idx && (
-                            <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[9px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-                              {color.name}
-                            </span>
-                          )}
-                        </button>
-                      ))}
+                      {colors.map((color, idx) => {
+                        const colorOos = !isOutOfStock && isColorOutOfStock(product!.id, color.name);
+                        return (
+                          <button
+                            key={color.name}
+                            onClick={() => setSelectedColorIndex(idx)}
+                            title={colorOos ? `${color.name} — Out of Stock` : color.name}
+                            className={`relative w-10 h-10 rounded-full border-2 transition-all duration-200 ${
+                              selectedColorIndex === idx
+                                ? "border-foreground scale-110"
+                                : "border-transparent hover:border-foreground/40"
+                            } ${colorOos ? "opacity-40" : ""}`}
+                            style={{
+                              backgroundColor: color.value,
+                              boxShadow: color.name === "White" ? "inset 0 0 0 1px #ccc" : undefined,
+                            }}
+                          >
+                            {colorOos && (
+                              <span className="absolute inset-0 flex items-center justify-center rounded-full overflow-hidden">
+                                <span className="block w-[130%] h-px bg-foreground/50 rotate-45 absolute" />
+                              </span>
+                            )}
+                            {selectedColorIndex === idx && (
+                              <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[9px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+                                {color.name}{colorOos ? " · OOS" : ""}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

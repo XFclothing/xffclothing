@@ -9,6 +9,8 @@ interface StoreSettings {
 interface StoreSettingsContextValue extends StoreSettings {
   setComingSoon: (value: boolean) => Promise<void>;
   toggleOutOfStock: (productId: string) => Promise<void>;
+  toggleOutOfStockColor: (productId: string, colorName: string) => Promise<void>;
+  isColorOutOfStock: (productId: string, colorName: string) => boolean;
   loaded: boolean;
 }
 
@@ -18,6 +20,8 @@ const StoreSettingsContext = createContext<StoreSettingsContextValue>({
   ...defaultSettings,
   setComingSoon: async () => {},
   toggleOutOfStock: async () => {},
+  toggleOutOfStockColor: async () => {},
+  isColorOutOfStock: () => false,
   loaded: false,
 });
 
@@ -73,8 +77,28 @@ export function StoreSettingsProvider({ children }: { children: React.ReactNode 
     await save({ ...settings, outOfStock: next });
   }, [settings, save]);
 
+  const toggleOutOfStockColor = useCallback(async (productId: string, colorName: string) => {
+    const key = `${productId}:${colorName}`;
+    const current = settings.outOfStock;
+    const next = current.includes(key)
+      ? current.filter((id) => id !== key)
+      : [...current, key];
+    await save({ ...settings, outOfStock: next });
+  }, [settings, save]);
+
+  const isColorOutOfStock = useCallback((productId: string, colorName: string) => {
+    return settings.outOfStock.includes(`${productId}:${colorName}`);
+  }, [settings.outOfStock]);
+
   return (
-    <StoreSettingsContext.Provider value={{ ...settings, setComingSoon, toggleOutOfStock, loaded }}>
+    <StoreSettingsContext.Provider value={{
+      ...settings,
+      setComingSoon,
+      toggleOutOfStock,
+      toggleOutOfStockColor,
+      isColorOutOfStock,
+      loaded,
+    }}>
       {children}
     </StoreSettingsContext.Provider>
   );
