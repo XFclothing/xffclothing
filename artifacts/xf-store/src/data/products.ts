@@ -1,7 +1,7 @@
 // ─── Zipper Hoodie gallery ───────────────────────────────────
 const zipperGallery = {
   black: ["/images/product-zipper-black.png", "/images/product-zipper-black-model.png"],
-  grey:  ["/images/product-zipper-grey.png",  "/images/product-zipper-grey-model.png"],
+  grey:  ["/images/product-zipper-grey.jpg", "/images/product-zipper-grey.png",  "/images/product-zipper-grey-model.png"],
   white: ["/images/product-zipper-white.png", "/images/product-zipper-white-model.png"],
 };
 
@@ -233,7 +233,7 @@ export const products = [
     sizes: ["S", "M", "L", "XL"],
     colors: [
       { name: "Black", value: "#1a1a1a", image: "/images/product-zipper-black.png", gallery: zipperGallery.black },
-      { name: "Grey",  value: "#888888", image: "/images/product-zipper-grey.png",  gallery: zipperGallery.grey  },
+      { name: "Grey",  value: "#888888", image: "/images/product-zipper-grey.jpg",  gallery: zipperGallery.grey  },
       { name: "White", value: "#f5f5f5", image: "/images/product-zipper-white.png", gallery: zipperGallery.white },
     ],
   },
