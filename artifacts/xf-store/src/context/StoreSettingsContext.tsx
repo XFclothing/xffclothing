@@ -10,7 +10,9 @@ interface StoreSettingsContextValue extends StoreSettings {
   setComingSoon: (value: boolean) => Promise<void>;
   toggleOutOfStock: (productId: string) => Promise<void>;
   toggleOutOfStockColor: (productId: string, colorName: string) => Promise<void>;
+  toggleOutOfStockSize: (productId: string, size: string) => Promise<void>;
   isColorOutOfStock: (productId: string, colorName: string) => boolean;
+  isSizeOutOfStock: (productId: string, size: string) => boolean;
   loaded: boolean;
 }
 
@@ -21,7 +23,9 @@ const StoreSettingsContext = createContext<StoreSettingsContextValue>({
   setComingSoon: async () => {},
   toggleOutOfStock: async () => {},
   toggleOutOfStockColor: async () => {},
+  toggleOutOfStockSize: async () => {},
   isColorOutOfStock: () => false,
+  isSizeOutOfStock: () => false,
   loaded: false,
 });
 
@@ -86,8 +90,21 @@ export function StoreSettingsProvider({ children }: { children: React.ReactNode 
     await save({ ...settings, outOfStock: next });
   }, [settings, save]);
 
+  const toggleOutOfStockSize = useCallback(async (productId: string, size: string) => {
+    const key = `${productId}:size:${size}`;
+    const current = settings.outOfStock;
+    const next = current.includes(key)
+      ? current.filter((id) => id !== key)
+      : [...current, key];
+    await save({ ...settings, outOfStock: next });
+  }, [settings, save]);
+
   const isColorOutOfStock = useCallback((productId: string, colorName: string) => {
     return settings.outOfStock.includes(`${productId}:${colorName}`);
+  }, [settings.outOfStock]);
+
+  const isSizeOutOfStock = useCallback((productId: string, size: string) => {
+    return settings.outOfStock.includes(`${productId}:size:${size}`);
   }, [settings.outOfStock]);
 
   return (
@@ -96,7 +113,9 @@ export function StoreSettingsProvider({ children }: { children: React.ReactNode 
       setComingSoon,
       toggleOutOfStock,
       toggleOutOfStockColor,
+      toggleOutOfStockSize,
       isColorOutOfStock,
+      isSizeOutOfStock,
       loaded,
     }}>
       {children}

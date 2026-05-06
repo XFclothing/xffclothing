@@ -31,7 +31,7 @@ const DEFAULT_PERMS = { view_orders: true, manage_orders: false, manage_tickets:
 export default function Founder() {
   const { role, loading } = useAuth();
   const [, navigate] = useLocation();
-  const { comingSoon, setComingSoon, outOfStock, toggleOutOfStock, toggleOutOfStockColor, isColorOutOfStock, loaded: settingsLoaded } = useStoreSettings();
+  const { comingSoon, setComingSoon, outOfStock, toggleOutOfStock, toggleOutOfStockColor, toggleOutOfStockSize, isColorOutOfStock, isSizeOutOfStock, loaded: settingsLoaded } = useStoreSettings();
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const [tab, setTab] = useState<"workers" | "orders" | "delivered" | "old_orders" | "tickets" | "notify" | "shop">("workers");
 
@@ -866,53 +866,102 @@ export default function Founder() {
                           </div>
                         </div>
 
-                        {/* Color rows (expanded) */}
-                        {isExpanded && colors && colors.length > 0 && (
-                          <div className="border-t border-foreground/6 px-5 pb-4 pt-3 space-y-2">
-                            <p className="text-[9px] uppercase tracking-[0.45em] text-foreground/25 mb-3">Colors</p>
-                            {colors.map((color) => {
-                              const colorOos = isColorOutOfStock(product.id, color.name);
-                              const productOos = outOfStock.includes(product.id);
-                              return (
-                                <div key={color.name} className="flex items-center justify-between gap-3">
-                                  <div className="flex items-center gap-3">
-                                    <span
-                                      className={`w-5 h-5 rounded-full border flex-shrink-0 ${colorOos || productOos ? "opacity-40" : ""}`}
-                                      style={{
-                                        backgroundColor: color.value,
-                                        borderColor: color.name === "White" ? "#ccc" : "transparent",
-                                        outline: "1px solid rgba(255,255,255,0.1)",
-                                      }}
-                                    />
-                                    <span className={`text-xs tracking-widest uppercase ${colorOos || productOos ? "text-foreground/30" : "text-foreground/70"}`}>
-                                      {color.name}
-                                    </span>
-                                    {colorOos && !productOos && (
-                                      <span className="text-[9px] uppercase tracking-[0.3em] text-foreground/25">Out of Stock</span>
-                                    )}
-                                  </div>
-                                  <button
-                                    onClick={() => settingsLoaded && !productOos && toggleOutOfStockColor(product.id, color.name)}
-                                    disabled={!settingsLoaded || comingSoon || productOos}
-                                    title={productOos ? "Whole product is OOS" : undefined}
-                                    className={`relative w-8 h-4 rounded-full transition-colors duration-300 disabled:opacity-25 ${
-                                      colorOos ? "bg-foreground/40" : "bg-foreground/10"
-                                    }`}
-                                  >
-                                    <span
-                                      className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform duration-300 ${
-                                        colorOos ? "translate-x-4" : "translate-x-0"
-                                      }`}
-                                    />
-                                  </button>
-                                </div>
-                              );
-                            })}
-                            {isOos && (
-                              <p className="text-[9px] text-foreground/20 uppercase tracking-widest pt-1">
-                                Disable "All OOS" to control individual colors.
-                              </p>
+                        {/* Color + Size rows (expanded) */}
+                        {isExpanded && (
+                          <div className="border-t border-foreground/6 px-5 pb-4 pt-3 space-y-4">
+
+                            {/* Colors */}
+                            {colors && colors.length > 0 && (
+                              <div className="space-y-2">
+                                <p className="text-[9px] uppercase tracking-[0.45em] text-foreground/25 mb-3">Colors</p>
+                                {colors.map((color) => {
+                                  const colorOos = isColorOutOfStock(product.id, color.name);
+                                  const productOos = outOfStock.includes(product.id);
+                                  return (
+                                    <div key={color.name} className="flex items-center justify-between gap-3">
+                                      <div className="flex items-center gap-3">
+                                        <span
+                                          className={`w-5 h-5 rounded-full border flex-shrink-0 ${colorOos || productOos ? "opacity-40" : ""}`}
+                                          style={{
+                                            backgroundColor: color.value,
+                                            borderColor: color.name === "White" ? "#ccc" : "transparent",
+                                            outline: "1px solid rgba(255,255,255,0.1)",
+                                          }}
+                                        />
+                                        <span className={`text-xs tracking-widest uppercase ${colorOos || productOos ? "text-foreground/30" : "text-foreground/70"}`}>
+                                          {color.name}
+                                        </span>
+                                        {colorOos && !productOos && (
+                                          <span className="text-[9px] uppercase tracking-[0.3em] text-foreground/25">Out of Stock</span>
+                                        )}
+                                      </div>
+                                      <button
+                                        onClick={() => settingsLoaded && !productOos && toggleOutOfStockColor(product.id, color.name)}
+                                        disabled={!settingsLoaded || comingSoon || productOos}
+                                        title={productOos ? "Whole product is OOS" : undefined}
+                                        className={`relative w-8 h-4 rounded-full transition-colors duration-300 disabled:opacity-25 ${
+                                          colorOos ? "bg-foreground/40" : "bg-foreground/10"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform duration-300 ${
+                                            colorOos ? "translate-x-4" : "translate-x-0"
+                                          }`}
+                                        />
+                                      </button>
+                                    </div>
+                                  );
+                                })}
+                                {isOos && (
+                                  <p className="text-[9px] text-foreground/20 uppercase tracking-widest pt-1">
+                                    Disable "All OOS" to control individual colors.
+                                  </p>
+                                )}
+                              </div>
                             )}
+
+                            {/* Sizes */}
+                            {product.sizes && product.sizes.length > 0 && (
+                              <div className="space-y-2 border-t border-foreground/6 pt-3">
+                                <p className="text-[9px] uppercase tracking-[0.45em] text-foreground/25 mb-3">Sizes</p>
+                                {product.sizes.map((size) => {
+                                  const sizeOos = isSizeOutOfStock(product.id, size);
+                                  const productOos = outOfStock.includes(product.id);
+                                  return (
+                                    <div key={size} className="flex items-center justify-between gap-3">
+                                      <div className="flex items-center gap-3">
+                                        <span className={`text-xs tracking-widest uppercase font-mono w-8 ${sizeOos || productOos ? "text-foreground/30" : "text-foreground/70"}`}>
+                                          {size}
+                                        </span>
+                                        {sizeOos && !productOos && (
+                                          <span className="text-[9px] uppercase tracking-[0.3em] text-foreground/25">Out of Stock</span>
+                                        )}
+                                      </div>
+                                      <button
+                                        onClick={() => settingsLoaded && !productOos && toggleOutOfStockSize(product.id, size)}
+                                        disabled={!settingsLoaded || comingSoon || productOos}
+                                        title={productOos ? "Whole product is OOS" : undefined}
+                                        className={`relative w-8 h-4 rounded-full transition-colors duration-300 disabled:opacity-25 ${
+                                          sizeOos ? "bg-foreground/40" : "bg-foreground/10"
+                                        }`}
+                                      >
+                                        <span
+                                          className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform duration-300 ${
+                                            sizeOos ? "translate-x-4" : "translate-x-0"
+                                          }`}
+                                        />
+                                      </button>
+                                    </div>
+                                  );
+                                })}
+                                {isOos && (
+                                  <p className="text-[9px] text-foreground/20 uppercase tracking-widest pt-1">
+                                    Disable "All OOS" to control individual sizes.
+                                  </p>
+                                )}
+                              </div>
+                            )}
+
                           </div>
                         )}
                       </div>

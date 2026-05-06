@@ -58,7 +58,7 @@ export default function ProductDetail() {
   const [, navigate] = useLocation();
   const { addToCart } = useCart();
   const { t, lang } = useLang();
-  const { comingSoon, outOfStock, loaded, isColorOutOfStock } = useStoreSettings();
+  const { comingSoon, outOfStock, loaded, isColorOutOfStock, isSizeOutOfStock } = useStoreSettings();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -109,7 +109,8 @@ export default function ProductDetail() {
   const isComingSoon = loaded && comingSoon;
   const isOutOfStock = loaded && !comingSoon && outOfStock.includes(product.id);
   const isColorOos = loaded && !comingSoon && !isOutOfStock && !!activeColor && outOfStock.includes(`${product.id}:${activeColor.name}`);
-  const unavailable = isComingSoon || isOutOfStock || isColorOos;
+  const isSizeOos = loaded && !comingSoon && !isOutOfStock && !isColorOos && !!selectedSize && isSizeOutOfStock(product.id, selectedSize);
+  const unavailable = isComingSoon || isOutOfStock || isColorOos || isSizeOos;
 
   function handleAddToCart() {
     if (product!.sizes.length > 0 && !selectedSize) {
@@ -295,19 +296,31 @@ export default function ProductDetail() {
                   <div>
                     <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">{t.product.size}</h3>
                     <div className="flex flex-wrap gap-3">
-                      {product.sizes.map((size) => (
-                        <button
-                          key={size}
-                          onClick={() => { setSelectedSize(size); setSizeError(false); }}
-                          className={`h-12 w-12 md:w-16 border flex items-center justify-center text-sm uppercase tracking-wider transition-all
-                            ${selectedSize === size
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-transparent text-foreground border-border hover:border-primary/50"
-                            }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
+                      {product.sizes.map((size) => {
+                        const sizeOos = !isOutOfStock && !isColorOos && isSizeOutOfStock(product.id, size);
+                        return (
+                          <button
+                            key={size}
+                            onClick={() => { if (!sizeOos) { setSelectedSize(size); setSizeError(false); } }}
+                            disabled={sizeOos}
+                            title={sizeOos ? "Out of Stock" : undefined}
+                            className={`relative h-12 w-12 md:w-16 border flex items-center justify-center text-sm uppercase tracking-wider transition-all
+                              ${sizeOos
+                                ? "opacity-30 cursor-not-allowed border-border text-foreground"
+                                : selectedSize === size
+                                  ? "bg-primary text-primary-foreground border-primary"
+                                  : "bg-transparent text-foreground border-border hover:border-primary/50"
+                              }`}
+                          >
+                            {sizeOos && (
+                              <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <span className="block w-[120%] h-px bg-foreground/50 rotate-45 absolute" />
+                              </span>
+                            )}
+                            {size}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
