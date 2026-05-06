@@ -11,8 +11,10 @@ interface StoreSettingsContextValue extends StoreSettings {
   toggleOutOfStock: (productId: string) => Promise<void>;
   toggleOutOfStockColor: (productId: string, colorName: string) => Promise<void>;
   toggleOutOfStockSize: (productId: string, size: string) => Promise<void>;
+  toggleOutOfStockColorSize: (productId: string, colorName: string, size: string) => Promise<void>;
   isColorOutOfStock: (productId: string, colorName: string) => boolean;
   isSizeOutOfStock: (productId: string, size: string) => boolean;
+  isColorSizeOutOfStock: (productId: string, colorName: string, size: string) => boolean;
   loaded: boolean;
 }
 
@@ -24,8 +26,10 @@ const StoreSettingsContext = createContext<StoreSettingsContextValue>({
   toggleOutOfStock: async () => {},
   toggleOutOfStockColor: async () => {},
   toggleOutOfStockSize: async () => {},
+  toggleOutOfStockColorSize: async () => {},
   isColorOutOfStock: () => false,
   isSizeOutOfStock: () => false,
+  isColorSizeOutOfStock: () => false,
   loaded: false,
 });
 
@@ -99,12 +103,25 @@ export function StoreSettingsProvider({ children }: { children: React.ReactNode 
     await save({ ...settings, outOfStock: next });
   }, [settings, save]);
 
+  const toggleOutOfStockColorSize = useCallback(async (productId: string, colorName: string, size: string) => {
+    const key = `${productId}:${colorName}:size:${size}`;
+    const current = settings.outOfStock;
+    const next = current.includes(key)
+      ? current.filter((id) => id !== key)
+      : [...current, key];
+    await save({ ...settings, outOfStock: next });
+  }, [settings, save]);
+
   const isColorOutOfStock = useCallback((productId: string, colorName: string) => {
     return settings.outOfStock.includes(`${productId}:${colorName}`);
   }, [settings.outOfStock]);
 
   const isSizeOutOfStock = useCallback((productId: string, size: string) => {
     return settings.outOfStock.includes(`${productId}:size:${size}`);
+  }, [settings.outOfStock]);
+
+  const isColorSizeOutOfStock = useCallback((productId: string, colorName: string, size: string) => {
+    return settings.outOfStock.includes(`${productId}:${colorName}:size:${size}`);
   }, [settings.outOfStock]);
 
   return (
@@ -114,8 +131,10 @@ export function StoreSettingsProvider({ children }: { children: React.ReactNode 
       toggleOutOfStock,
       toggleOutOfStockColor,
       toggleOutOfStockSize,
+      toggleOutOfStockColorSize,
       isColorOutOfStock,
       isSizeOutOfStock,
+      isColorSizeOutOfStock,
       loaded,
     }}>
       {children}

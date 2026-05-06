@@ -58,7 +58,7 @@ export default function ProductDetail() {
   const [, navigate] = useLocation();
   const { addToCart } = useCart();
   const { t, lang } = useLang();
-  const { comingSoon, outOfStock, loaded, isColorOutOfStock, isSizeOutOfStock } = useStoreSettings();
+  const { comingSoon, outOfStock, loaded, isColorOutOfStock, isSizeOutOfStock, isColorSizeOutOfStock } = useStoreSettings();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
@@ -109,7 +109,8 @@ export default function ProductDetail() {
   const isComingSoon = loaded && comingSoon;
   const isOutOfStock = loaded && !comingSoon && outOfStock.includes(product.id);
   const isColorOos = loaded && !comingSoon && !isOutOfStock && !!activeColor && outOfStock.includes(`${product.id}:${activeColor.name}`);
-  const isSizeOos = loaded && !comingSoon && !isOutOfStock && !isColorOos && !!selectedSize && isSizeOutOfStock(product.id, selectedSize);
+  const isSizeOos = loaded && !comingSoon && !isOutOfStock && !isColorOos && !!selectedSize
+    && (isSizeOutOfStock(product.id, selectedSize) || (!!activeColor && isColorSizeOutOfStock(product.id, activeColor.name, selectedSize)));
   const unavailable = isComingSoon || isOutOfStock || isColorOos || isSizeOos;
 
   function handleAddToCart() {
@@ -297,7 +298,7 @@ export default function ProductDetail() {
                     <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-4">{t.product.size}</h3>
                     <div className="flex flex-wrap gap-3">
                       {product.sizes.map((size) => {
-                        const sizeOos = !isOutOfStock && !isColorOos && isSizeOutOfStock(product.id, size);
+                        const sizeOos = !isOutOfStock && !isColorOos && (isSizeOutOfStock(product.id, size) || (!!activeColor && isColorSizeOutOfStock(product.id, activeColor.name, size)));
                         return (
                           <button
                             key={size}
