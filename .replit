@@ -87,6 +87,9 @@ GMX_PASSWORD = "XFclothing12!"
 BREVO_LOGIN = "xfclothing@gmx.de"
 BREVO_SMTP_KEY = "xsmtpsib-e771d672b95af60a044c1a2c1390e31e07ecb3b11f005ac2ba552ebe3a9b9ab9-NzW0bVW7sZqsJ8Lp"
 SUPABASE_DATABASE_URL = "postgresql://postgres:gmxtBL16gyLQMPST@db.rkcnbiqyhqnmwysqydxc.supabase.co:5432/postgres"
+SUPABASE_URL = "https://rkcnbiqyhqnmwysqydxc.supabase.co"
+PAYPAL_MODE = "sandbox"
+LOG_LEVEL = "info"
 
 [nix]
 channel = "stable-25_05"
